@@ -1,0 +1,17 @@
+{
+  "presets": [
+    "@babel/preset-env"
+  ],
+  "plugins": [
+    "@babel/plugin-transform-react-jsx",
+    "@babel/plugin-transform-regenerator",
+    [
+      "babel-plugin-inline-import",
+      {
+        "extensions": [
+          ".md"
+        ]
+      }
+    ]
+  ]
+}

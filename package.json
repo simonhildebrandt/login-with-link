@@ -1,0 +1,42 @@
+{
+  "name": "login-with-link",
+  "version": "1.0.0",
+  "description": "Dead-simple user authentication",
+  "main": "index.js",
+  "author": "Simon Hildebrandt <simonhildebrandt@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "serve": "live-server --port=9000 public/",
+    "build": "browserify src/index.js -o public/index.js -t [ babelify ]",
+    "watch": "watchify src/index.js -o public/index.js -t [ babelify ]",
+    "deploy": "firebase deploy",
+    "emulator": "firebase emulators:start --export-on-exit=./firebase_data --import=./firebase_data"
+  },
+  "dependencies": {
+    "@babel/cli": "^7.11.6",
+    "@babel/core": "^7.9.0",
+    "@babel/plugin-transform-react-jsx": "^7.9.4",
+    "@babel/polyfill": "^7.8.7",
+    "@babel/preset-env": "^7.9.5",
+    "@chakra-ui/icons": "^1.0.3",
+    "@chakra-ui/react": "^1.1.0",
+    "@emotion/react": "^11.1.4",
+    "@emotion/styled": "^11.0.0",
+    "axios": "^0.21.0",
+    "babel-plugin-inline-import": "^3.0.0",
+    "babelify": "^10.0.0",
+    "browserify": "^16.5.1",
+    "framer-motion": "^3.1.1",
+    "gravatar": "^1.8.1",
+    "jsonwebtoken": "^8.5.1",
+    "live-server": "^1.2.1",
+    "navigo": "7.1.2",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "react-markdown": "^5.0.3",
+    "watchify": "^3.11.1"
+  },
+  "devDependencies": {
+    "firebase-tools": "^9.1.0"
+  }
+}

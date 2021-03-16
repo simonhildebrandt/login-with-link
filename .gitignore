@@ -1,0 +1,10 @@
+node_modules/
+
+.envrc
+
+firebase_data/
+firestore-debug.log
+firebase-debug.log
+ui-debug.log
+
+public/index.js
