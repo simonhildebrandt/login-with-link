@@ -2,7 +2,7 @@ import React from 'react';
 import { Box, Flex, Button, HStack } from "@chakra-ui/react"
 
 import { navigate } from './router';
-import SignedInHeader from './signed-in-header';
+import Header from './header';
 
 
 const Footer = ({ children }) => {
@@ -11,7 +11,7 @@ const Footer = ({ children }) => {
 
 export default function ({ user, children }) {
   return <Flex direction="column" height="100%">
-    {user && <SignedInHeader user={user} />}
+    <Header user={user} />
 
     <Box
       px={4}
@@ -21,7 +21,7 @@ export default function ({ user, children }) {
       overflowY="auto"
       width="100%"
     >
-      <Box m="auto" maxWidth="800px">{children}</Box>
+      <Box m="auto" maxWidth="800px" pb={16}>{children}</Box>
     </Box>
     <Footer>
       <HStack spacing={4}>
@@ -29,5 +29,5 @@ export default function ({ user, children }) {
         <Button onClick={() => navigate("/about")} variant="link">About</Button>
       </HStack>
     </Footer>
-  </Flex>
+  </Flex >
 }

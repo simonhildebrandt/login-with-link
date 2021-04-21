@@ -6,10 +6,21 @@
     "@babel/plugin-transform-react-jsx",
     "@babel/plugin-transform-regenerator",
     [
+      "transform-inline-environment-variables",
+      {
+        "include": [
+          "SITE_URL",
+          "API_URL"
+        ]
+      }
+    ],
+    [
       "babel-plugin-inline-import",
       {
         "extensions": [
-          ".md"
+          ".md",
+          ".html",
+          ".text"
         ]
       }
     ]

@@ -9,7 +9,10 @@
     "serve": "live-server --port=9000 public/",
     "build": "browserify src/index.js -o public/index.js -t [ babelify ]",
     "watch": "watchify src/index.js -o public/index.js -t [ babelify ]",
-    "deploy": "firebase deploy",
+    "build_prod": "API_URL=https://login-with.link/ browserify src/index.js -o public/index.js -t [ babelify ]",
+    "deploy_functions": "firebase deploy --only functions",
+    "deploy_hosting": "firebase deploy --only hosting",
+    "setup_api": "firebase functions:config:set api.conf=\"something\"",
     "emulator": "firebase emulators:start --export-on-exit=./firebase_data --import=./firebase_data"
   },
   "dependencies": {

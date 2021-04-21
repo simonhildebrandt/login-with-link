@@ -8,12 +8,22 @@ import {
   EditableInput,
   EditablePreview,
   IconButton,
-  ButtonGroup
+  ButtonGroup,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalCloseButton,
+  ModalBody,
+  ModalFooter
 } from "@chakra-ui/react"
-import { AddIcon, DeleteIcon, CheckIcon, CloseIcon, EditIcon } from '@chakra-ui/icons'
+import {
+  AddIcon, DeleteIcon, CheckIcon, CloseIcon, EditIcon, EmailIcon
+} from '@chakra-ui/icons';
 
 import ApiKeyDetails from './api-key-details';
 import { useAuthedApiCall } from './utils';
+import DummyEmail from './dummy-email';
 
 
 function ClientDetails({ client, deleteClient }) {
@@ -44,6 +54,12 @@ function ClientDetails({ client, deleteClient }) {
     data: options
   }));
 
+  const [showingEmail, setShowingEmail] = useState(false);
+  function toggleEmail() { setShowingEmail(_ => !_) };
+
+  const [wideEmail, setWideEmail] = useState(true);
+  function toggleWideEmail() { setWideEmail(_ => !_) };
+
   useEffect(() => { getApiKeys() }, []);
 
   if (!finishedGettingKeys) return "loading";
@@ -59,6 +75,8 @@ function ClientDetails({ client, deleteClient }) {
   function onUpdateName(name) {
     updateName({ name });
   }
+
+  const minEmailWidth = wideEmail ? 600 : 200;
 
   function EditableControls({ isEditing, onSubmit, onCancel, onEdit }) {
     return isEditing ? (
@@ -78,6 +96,27 @@ function ClientDetails({ client, deleteClient }) {
   }
 
   return <Box bgColor="white" p={2}>
+    <Modal
+      isOpen={showingEmail}
+      onClose={toggleEmail}
+      size={wideEmail ? "xl" : "xs"}
+      scrollBehavior="inside"
+    >
+      <ModalOverlay />
+      <ModalContent>
+        <ModalHeader>Example email</ModalHeader>
+        <ModalCloseButton />
+        <ModalBody>
+          <DummyEmail client={client} />
+        </ModalBody>
+        <ModalFooter>
+          <Button onClick={toggleWideEmail}>
+            {wideEmail ? "> Narrow <" : "< Wide >"}
+          </Button>
+        </ModalFooter>
+      </ModalContent>
+    </Modal>
+
     <Flex
       align="center"
       justify="space-between"
@@ -106,6 +145,11 @@ function ClientDetails({ client, deleteClient }) {
       {loadingKeys && <Spinner />}
       <ButtonGroup justifyContent="center" size="sm">
 
+        <IconButton
+          onClick={toggleEmail}
+          icon={<EmailIcon />}
+          colorScheme="green"
+        />
         <Button
           isLoading={addingKey}
           onClick={addKey}

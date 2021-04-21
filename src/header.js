@@ -22,17 +22,30 @@ import { navigate } from './router';
 import Logo from './logo';
 
 
-function SignedInHeader({ user }) {
 
+function UserTools({ user }) {
   const { email } = user;
   const gravatarUrl = Gravatar.url(email, { size: 32 });
 
+  return <Menu>
+    <MenuButton as={Button}>
+      <Image src={gravatarUrl} />
+    </MenuButton>
+    <MenuList>
+      <MenuGroup title={`${email}`}>
+        <MenuItem onClick={logout}>Logout</MenuItem>
+      </MenuGroup>
+    </MenuList>
+  </Menu>
+}
+
+function Header({ user }) {
   return <Flex
-    px={2}
+    px={3}
+    py={2}
     justify="space-between"
     align="center"
     bgColor="gray.600"
-    height="60px"
   >
     <Box
       cursor="pointer"
@@ -47,23 +60,14 @@ function SignedInHeader({ user }) {
     <Flex align="center">
       <HStack spacing="4" pr="4">
         <Button onClick={() => navigate("/docs")} variant="link">Docs</Button>
-        <Button onClick={() => navigate("/admin")} variant="link">Admin</Button>
+        {user && <Button onClick={() => navigate("/admin")} variant="link">Admin</Button>}
       </HStack>
 
-      <Menu>
-        <MenuButton as={Button}>
-          <Image src={gravatarUrl} />
-        </MenuButton>
-        <MenuList>
-          <MenuGroup title={`${email}`}>
-            <MenuItem onClick={logout}>Logout</MenuItem>
-          </MenuGroup>
-        </MenuList>
-      </Menu>
+      {user && <UserTools user={user} />}
     </Flex>
   </Flex>
 }
 
-SignedInHeader.displayName = "SignedInHeader";
+Header.displayName = "Header";
 
-export default SignedInHeader;
+export default Header;

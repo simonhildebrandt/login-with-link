@@ -7,9 +7,10 @@ import ClientDetails from './client-details';
 
 import DeleteDialog from './delete-dialog';
 
-import SignedInHeader from './signed-in-header';
+import Header from './header';
 
 import { navigate } from './router';
+import Loader from './loader';
 
 
 export default function ({ user }) {
@@ -61,11 +62,11 @@ export default function ({ user }) {
 
   const updating = gettingClients || deletingClient;
 
-  if (!gotClients) return "loading";
+  if (!gotClients) return <Loader text="Loading admin..." />;
 
   return <Flex direction="column" bgColor="gray.100" height="100%" overflow="hidden">
 
-    <SignedInHeader user={user} />
+    <Header user={user} />
 
     <Box height="100%" overflow="hidden">
       {clients.length == 0 ? (

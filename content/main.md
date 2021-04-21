@@ -14,4 +14,10 @@ setup, test and maintain. Authentication providers like Auth0
 or Firebase help manage it, but it's still a mess - when
 something much simpler will probably serve your needs.
 
-__Login With Link__ acts just like the secure login link from sites like Tumblr, or a password reset link - as with most sites, all you need to prove you're you is access to your email account.
+__Login With Link__ acts just like the 'secure login link' from sites like Tumblr, or a password reset link - as with most sites, all you need to prove you're you is access to your email account.
+
+## Cost?
+
+__Login With Link__ is currently free, as we add features and find out who it's useful for. It's capped at 50 logins per day, to keep our server costs down - if you need more [let us know](mailto:simonhildebrandt@gmail.com).
+
+Beyond the alpha we'll introduce pricing tiers - but there'll always be an introductory free tier.

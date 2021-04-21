@@ -7,7 +7,6 @@ import { logout } from './login-check';
 import { privateKey } from './utils';
 
 import Logo from './logo';
-import SignedInHeader from './signed-in-header';
 
 import Page from './page';
 import Markdown from './markdown';
@@ -38,15 +37,17 @@ export default function ({ user }) {
             </p>
           </Box>
         ) : (
-          <Button
-            width="xl"
-            padding={8}
-            onClick={() => navigate(`/login/${privateKey}`)}
-            my={8}
-            color="white"
-            bg="green.500"
-            fontSize="24px"
-          >Login Now!</Button>
+          <Box mx="auto" width="xl">
+            <Button
+              width="xl"
+              padding={8}
+              onClick={() => navigate(`/login/${privateKey}`)}
+              my={8}
+              color="white"
+              bg="green.500"
+              fontSize="24px"
+            >Login Now!</Button>
+          </Box>
         )}
 
         <Flex>

@@ -70,10 +70,11 @@ const theme = extendTheme({
     },
     link: {
       color: "teal.500"
+    },
+    muted: {
+      color: "gray.100"
     }
   },
 });
-
-console.log(theme)
 
 export default theme;

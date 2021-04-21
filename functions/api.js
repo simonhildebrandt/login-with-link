@@ -8,14 +8,25 @@ const AWS = require("aws-sdk");
 
 const { getRecordByKeyValue, checkToken } = require("./utils");
 
+const { formatEmailSubject, formatTextEmail, formatHtmlEmail } = require('./email-template');
 
 AWS.config.update({ region: process.env.AWS_REGION });
+
+
+const API_URL = process.env.API_URL || "http://localhost:5001/login-with-link/us-central1";
+const SITE_URL = process.env.SITE_URL || "http://localhost:9000";
 
 
 const app = express();
 
 app.use(cors({ origin: true }));
 app.use(express.json());
+
+app.use((req, res, next) => {
+  // Clear function name out of url for Firebase rewrite
+  req.url = req.url.replace(/\/api/, "");
+  next();
+});
 
 function getMergedFromRef(ref) {
   return ref.get().then(obj => {
@@ -28,9 +39,14 @@ function getMergedFromRef(ref) {
 
 app.get("/keys/:key", async (req, res) => {
   return getRecordByKeyValue("apiKeys", "key", req.params.key)
-    .then(apiKey => {
-      if (apiKey) return res.json({ valid: true });
-      return res.status(404).json({ error: "No api key found" });
+    .then(async apiKey => {
+      if (apiKey) {
+        const { clientId } = apiKey;
+        const client = await admin.firestore().collection("clients").doc(clientId).get();
+        if (client.exists) return res.json({ name: client.data().name })
+      };
+
+      return res.status(404).json({ error: "No api key or client found" });
     })
     .catch(error => {
       console.error(error);
@@ -59,22 +75,43 @@ async function createLoginLink(apiKey, email) {
     .then(getMergedFromRef)
 }
 
-function emailLink({ email, url }) {
+function emailLink({ email, url, client }) {
   const payload = data => ({ Charset: "UTF-8", Data: data });
 
-  const params = {
+  const params = { client_name: client.name, link: url };
+
+  const data = {
     Destination: { ToAddresses: [email] },
     Message: {
       Body: {
-        Html: payload(`<a href="${url}">Click this link</a>`),
-        Text: payload("Click this link: " + url)
+        Html: payload(formatHtmlEmail(params)),
+        Text: payload(formatTextEmail(params))
       },
-      Subject: payload("Login with link for [customer]")
+      Subject: payload(formatEmailSubject(params))
     },
     Source: "simonhildebrandt@gmail.com"
   };
 
-  return new AWS.SES({ apiVersion: '2010-12-01' }).sendEmail(params).promise();
+  return new AWS.SES({ apiVersion: '2010-12-01' }).sendEmail(data).promise();
+}
+
+async function sendLink(key, email) {
+  const apiKey = await getRecordByKeyValue("apiKeys", "key", key)
+    .catch(error => Promise.reject({ error, status: 404, message: "Error loading api key data" }));
+
+  if (!apiKey) throw { status: 404, message: "No api key found" };
+
+  const { clientId } = apiKey;
+  const clientRef = await admin.firestore().collection("clients").doc(clientId).get();
+  if (!clientRef.exists) throw { status: 404, message: "No client found" };
+  const client = clientRef.data();
+
+  const link = await createLoginLink(apiKey, email);
+  if (!link) throw { message: "Error creating link" };
+
+  const url = `${API_URL}/api/done/${link.uuid}`;
+
+  return emailLink({ email, url, client });
 }
 
 app.post("/send-link", async (req, res) => {
@@ -82,27 +119,12 @@ app.post("/send-link", async (req, res) => {
   if (!email || !key)
     return res.status(404).json({ error: "Email address and api key required" });
 
-  return getRecordByKeyValue("apiKeys", "key", key)
-    .then(apiKey => {
-      if (!apiKey) return res.status(404).json({ error: "No api key found" });
-
-      return createLoginLink(apiKey, email)
-        .then(link => {
-          const url = `http://localhost:5001/login-with-link/us-central1/api/done/${link.uuid}`;
-
-          return emailLink({ email, url })
-            .then(() => res.json({ message: "success" }))
-            .catch(err => console.error(err))
-
-        })
-        .catch(error => {
-          console.error(error);
-          res.status(500).json({ error: "Failed to send link" });
-        });
-    })
-    .catch(error => {
+  sendLink(key, email)
+    .then(_ => res.json({ message: "success" }))
+    .catch((error) => {
       console.error(error);
-      res.status(500).json({ error: "Error loading api key data" });
+      const { status = 500, message } = error;
+      res.status(type).json({ message });
     });
 });
 
@@ -133,7 +155,7 @@ app.get("/done/:id", async (req, res) => {
     })
     .catch(error => {
       console.log(error)
-      res.redirect("http://localhost:9000/login_error?error=no-link-found");
+      res.redirect(`${SITE_URL}/login_error?error=no-link-found`);
     });
 });
 

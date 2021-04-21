@@ -10,6 +10,7 @@ import Pages from './pages';
 import Main from './main';
 import Admin from './admin';
 import Login from './login';
+import Loader from './loader';
 
 import { handleToken, loginCheck } from './login-check';
 
@@ -19,6 +20,14 @@ import theme from './theme';
 
 
 handleToken();
+
+
+function ShowPage({ showView, user, apiKey }) {
+  if (showView === 'login') return <Login user={user} apiKey={apiKey} />;
+  if (showView === 'admin') return <Admin user={user} />;
+  if (showView === 'main') return <Main user={user} />;
+  return <Pages user={user} page={showView} />;
+}
 
 const App = () => {
   const [routerState, setRouterState] = useReducer(
@@ -53,12 +62,9 @@ const App = () => {
     loginCheck({ key: privateKey }).then(result => setLogin(result));
   }, []);
 
-  if (!loginState) return "Checking login";
+  if (!loginState) return <Loader text="Checking login..." />;
 
-  if (showView === 'login') return <Login apiKey={apiKey} />;
-  if (showView === 'admin') return <Admin user={user} />;
-  if (showView === 'main') return <Main user={user} />;
-  return <Pages user={user} page={showView} />;
+  return <ShowPage showView={showView} user={user} apiKey={apiKey} />
 };
 
 ReactDOM.render(<ChakraProvider theme={theme}><App /></ChakraProvider>, document.getElementById('app'));
