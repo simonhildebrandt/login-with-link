@@ -26,6 +26,7 @@
     "@emotion/react": "^11.1.4",
     "@emotion/styled": "^11.0.0",
     "axios": "^0.21.0",
+    "babel-plugin-transform-inline-environment-variables": "^0.4.3",
     "babel-plugin-inline-import": "^3.0.0",
     "babelify": "^10.0.0",
     "browserify": "^16.5.1",

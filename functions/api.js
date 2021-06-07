@@ -15,7 +15,7 @@ AWS.config.update({ region: process.env.AWS_REGION });
 
 const API_URL = process.env.API_URL || "http://localhost:5001/login-with-link/us-central1";
 const SITE_URL = process.env.SITE_URL || "http://localhost:9000";
-
+const LOGIN_WINDOW = 1000 * 60 * 60 * 24; // 1 day in milliseconds
 
 const app = express();
 
@@ -66,7 +66,7 @@ async function createLoginLink(apiKey, email) {
     .add({
       email,
       userId: user.id,
-      apiKey: apiKey.id,
+      apiKey: apiKey.key,
       uuid: uuidv4(),
       returnUrl: apiKey.returnUrl,
       followedAt: [],
@@ -89,7 +89,7 @@ function emailLink({ email, url, client }) {
       },
       Subject: payload(formatEmailSubject(params))
     },
-    Source: "simonhildebrandt@gmail.com"
+    Source: "help@login-with.link"
   };
 
   return new AWS.SES({ apiVersion: '2010-12-01' }).sendEmail(data).promise();
@@ -100,6 +100,20 @@ async function sendLink(key, email) {
     .catch(error => Promise.reject({ error, status: 404, message: "Error loading api key data" }));
 
   if (!apiKey) throw { status: 404, message: "No api key found" };
+
+  const { loginLimit = 50 } = apiKey;
+
+  const previousLogins = await admin.firestore().collection("loginLinks")
+    .where("apiKey", "==", key)
+    .where("createdAt", ">", (new Date()).valueOf() - LOGIN_WINDOW)
+    .get();
+
+  if (previousLogins.size >= loginLimit) throw {
+    status: 422,
+    message: `This client has exceeded their login limit of ${loginLimit} in 24 hours.`
+  };
+
+  console.log(`${key} had ${previousLogins.size} previous logins`);
 
   const { clientId } = apiKey;
   const clientRef = await admin.firestore().collection("clients").doc(clientId).get();
@@ -121,10 +135,10 @@ app.post("/send-link", async (req, res) => {
 
   sendLink(key, email)
     .then(_ => res.json({ message: "success" }))
-    .catch((error) => {
-      console.error(error);
+    .catch(error => {
+      console.error({ error });
       const { status = 500, message } = error;
-      res.status(type).json({ message });
+      res.status(status).json({ message });
     });
 });
 
@@ -143,11 +157,7 @@ app.get("/done/:id", async (req, res) => {
         apiKey
       } = link;
 
-      const apiKeyData = await admin.firestore().collection('apiKeys')
-        .doc(apiKey).get().then(d => d.data());
-
-      if (!apiKeyData) return Promise.reject("Couldn't find apiKey");
-
+      const apiKeyData = await getRecordByKeyValue("apiKeys", "key", apiKey)
       // TODO append 'followedAt'
 
       token = jwt.sign({ email }, apiKeyData.secret, { ...jwtDefaults, subject: userId });

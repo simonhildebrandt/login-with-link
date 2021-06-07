@@ -14,7 +14,7 @@ const htmlEmailTemplate = `<div width="100%" height="100%" style="background-col
       If you have trouble, try copying this link into your browser: <div style="margin-top: 8px">{link}</div>
     </div>
     <div style="font-size: 12px; color: gray; margin-top: 16px">
-      If you have any problems or concerns, please contact <a href="mailto:simonhildebrandt@gmail.com">simonhildebrandt@gmail.com</a>.
+      If you have any problems or concerns, please contact <a href="mailto:help@login-with.link">help@login-with.link</a>.
     </div>
   </div>
 </div>
