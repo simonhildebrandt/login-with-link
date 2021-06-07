@@ -6,12 +6,13 @@
   "author": "Simon Hildebrandt <simonhildebrandt@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "serve": "live-server --port=9000 public/",
-    "build": "browserify src/index.js -o public/index.js -t [ babelify ]",
-    "watch": "watchify src/index.js -o public/index.js -t [ babelify ]",
+    "serve": "live-server --port=9000 dev/",
+    "build": "browserify src/index.js -o dev/index.js -t [ babelify ]",
+    "watch": "watchify src/index.js -o dev/index.js -t [ babelify ]",
     "build_prod": "API_URL=https://login-with.link/ browserify src/index.js -o public/index.js -t [ babelify ]",
     "deploy_functions": "firebase deploy --only functions",
-    "deploy_hosting": "firebase deploy --only hosting",
+    "deploy_hosting": "yarn build_prod && yarn firebase deploy --only hosting",
+    "deploy_all": "yarn deploy_functions && yarn deploy_hosting",
     "setup_api": "firebase functions:config:set api.conf=\"something\"",
     "emulator": "firebase emulators:start --export-on-exit=./firebase_data --import=./firebase_data"
   },

@@ -8,4 +8,5 @@ firebase-debug.log
 ui-debug.log
 .firebase
 
+dev/index.js
 public/index.js
