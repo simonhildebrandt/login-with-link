@@ -12,7 +12,9 @@ import {
   Button,
   ButtonGroup,
   HStack,
-  Link
+  Link,
+  Tag,
+  Spinner
 } from "@chakra-ui/react"
 
 import { ViewIcon, CopyIcon } from '@chakra-ui/icons'
@@ -20,6 +22,8 @@ import { ViewIcon, CopyIcon } from '@chakra-ui/icons'
 import DeleteDialog from './delete-dialog';
 
 import { useAuthedApiCall, host } from './utils';
+
+import { DEFAULT_LOGIN_LIMIT } from '../functions/constants';
 
 
 function validUrl(url) {
@@ -32,7 +36,7 @@ function validUrl(url) {
 }
 
 function ApiKeyDetails({ clientId, apiKey, refresh }) {
-  const { name, key, returnUrl, secret } = apiKey;
+  const { name, key, returnUrl, secret, loginLimit = DEFAULT_LOGIN_LIMIT } = apiKey;
 
   const keyLink = `${host}/#/login/${key}`;
 
@@ -50,6 +54,19 @@ function ApiKeyDetails({ clientId, apiKey, refresh }) {
       returnUrl: newUrl
     }
   });
+
+  const {
+    loading: loadingLogins,
+    start: loadLogins,
+    data: recentLogins
+  } = useAuthedApiCall({
+    method: "GET",
+    url: `private/clients/${clientId}/keys/${key}/logins`
+  });
+
+  useEffect(() => {
+    loadLogins();
+  }, []);
 
   const {
     loading: deletingKey,
@@ -199,6 +216,10 @@ function ApiKeyDetails({ clientId, apiKey, refresh }) {
             onClick={saveForm}
           >Save</Button>
         </ButtonGroup>
+        <Tag size="lg" color="gray.500"> 
+          {loadingLogins ? <Spinner size="xs" mr={2}/> : recentLogins?.count } logins 
+          / {loginLimit} max
+        </Tag>
         <Flex fontSize={20} flexGrow={1} justify="flex-end" align="center">
           <Link href={keyLink}>{keyLink}</Link>
           <Button ml={2} variant="outline" onClick={copyLink}><CopyIcon /></Button>

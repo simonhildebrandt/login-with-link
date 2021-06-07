@@ -6,6 +6,7 @@ const express = require('express');
 const cors = require('cors');
 
 const { checkToken } = require("./utils");
+const { LOGIN_WINDOW } = require('./constants');
 
 const authKey = "6870e340-2465-4da8-96fa-26c3027dc7e3";
 
@@ -170,6 +171,17 @@ app.delete("/clients/:clientId/keys/:key", accessCheck, async (req, res) => {
         res.json({ Message: "Deleted" });
       }).catch(() => res.status(500).json({ message: "delete failed" }));
     })
+});
+
+app.get("/clients/:clientId/keys/:key/logins", accessCheck, async (req, res) => {
+  const { key } = req.params;
+
+  const previousLogins = await admin.firestore().collection("loginLinks")
+    .where("apiKey", "==", key)
+    .where("createdAt", ">", (new Date()).valueOf() - LOGIN_WINDOW)
+    .get();
+
+  res.json({count: previousLogins.size})
 });
 
 exports.privateApp = app;

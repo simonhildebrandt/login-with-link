@@ -9,13 +9,13 @@ const AWS = require("aws-sdk");
 const { getRecordByKeyValue, checkToken } = require("./utils");
 
 const { formatEmailSubject, formatTextEmail, formatHtmlEmail } = require('./email-template');
+const { LOGIN_WINDOW, DEFAULT_LOGIN_LIMIT } = require('./constants');
 
 AWS.config.update({ region: process.env.AWS_REGION });
 
 
 const API_URL = process.env.API_URL || "http://localhost:5001/login-with-link/us-central1";
 const SITE_URL = process.env.SITE_URL || "http://localhost:9000";
-const LOGIN_WINDOW = 1000 * 60 * 60 * 24; // 1 day in milliseconds
 
 const app = express();
 
@@ -101,7 +101,7 @@ async function sendLink(key, email) {
 
   if (!apiKey) throw { status: 404, message: "No api key found" };
 
-  const { loginLimit = 50 } = apiKey;
+  const { loginLimit = DEFAULT_LOGIN_LIMIT } = apiKey;
 
   const previousLogins = await admin.firestore().collection("loginLinks")
     .where("apiKey", "==", key)
