@@ -14,7 +14,8 @@ import {
   HStack,
   Link,
   Tag,
-  Spinner
+  Spinner,
+  Tooltip
 } from "@chakra-ui/react"
 
 import { ViewIcon, CopyIcon } from '@chakra-ui/icons'
@@ -216,10 +217,12 @@ function ApiKeyDetails({ clientId, apiKey, refresh }) {
             onClick={saveForm}
           >Save</Button>
         </ButtonGroup>
-        <Tag size="lg" color="gray.500"> 
-          {loadingLogins ? <Spinner size="xs" mr={2}/> : recentLogins?.count } logins 
-          / {loginLimit} max
-        </Tag>
+        <Tooltip label="Recent logins, and your current maximum - for 24 hour window">
+          <Tag size="lg" color="gray.500"> 
+            {loadingLogins ? <Spinner size="xs" mr={2}/> : recentLogins?.count } logins 
+            / {loginLimit} max
+          </Tag>
+        </Tooltip>
         <Flex fontSize={20} flexGrow={1} justify="flex-end" align="center">
           <Link href={keyLink}>{keyLink}</Link>
           <Button ml={2} variant="outline" onClick={copyLink}><CopyIcon /></Button>

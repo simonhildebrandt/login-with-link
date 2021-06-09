@@ -70,14 +70,15 @@ export default function ({ user }) {
 
     <Box height="100%" overflow="hidden">
       {clients.length == 0 ? (
-        <Box>
-          <Box>Click below to get started:</Box>
+        <Flex justify="center" direction="column" align="center">
+          <Flex mt={16} mb={8} as="h2" textStyle="h2">Click below to get started!</Flex>
           <Button
+            size="lg"
             isLoading={addingClient}
             onClick={addNewClient}
             colorScheme="green"
           >Create A New Client</Button>
-        </Box>
+        </Flex>
       ) : (
         <Flex direction="column" height="100%" overflow="hidden">
           <DeleteDialog
