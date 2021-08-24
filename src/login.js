@@ -24,6 +24,7 @@ const sendLinkUrl = baseURL + "api/send-link";
 
 function LoginBody({successResponse, apiKeyData, onSubmit, sendingRequest}) {
   const [email, setEmail] = useState("");
+  const {name, style} = apiKeyData;
 
   function updateEmail(e) {
     setEmail(e.target.value);
@@ -31,20 +32,31 @@ function LoginBody({successResponse, apiKeyData, onSubmit, sendingRequest}) {
 
   if (successResponse) {
     return <>
-      <h2>Login to <strong>{apiKeyData.name}</strong> successful.</h2>
+      <h2>Login to <strong>{name}</strong> successful.</h2>
       <p>Please check your email and click the link we've sent to you.</p>
     </>
   }
 
   return <>
-    <h2>Log into <strong>{apiKeyData.name}</strong></h2>
-    <Box my={4} color="gray.400">
-      Enter your email below to log in to <strong>{apiKeyData.name}</strong>.
-    </Box>
+    { style === 'faslet' ? (
+      <>
+        <img src="faslet-logo.png"/>
+        <Box my={4} p={2} style={{backgroundColor: "#4faf93"}} color="white">
+          Enter your email below to log in to <strong>{name}</strong>.
+        </Box>
+      </>
+    ) : (
+      <>
+        <h2>Log into <strong>{name}</strong></h2>
+        <Box my={4} color="gray.400">
+          Enter your email below to log in to <strong>{apiKeyData.name}</strong>.
+        </Box>
+      </>
+    ) }
     { sendingRequest ? (
       <Flex mt={8} justify="center"><Spinner size="xl"/></Flex>
     ) : (
-      <form>
+      <form onSubmit={() => onSubmit(email)}>
         <FormControl id="email">
           <FormLabel>Email address</FormLabel>
           <Input value={email} onChange={updateEmail} type="email" />
@@ -52,7 +64,7 @@ function LoginBody({successResponse, apiKeyData, onSubmit, sendingRequest}) {
         </FormControl>
 
         <Flex mt={2} justify="flex-end">
-          <Button onClick={() => onSubmit(email)}>Login</Button>
+          <Button type="submit">Login</Button>
         </Flex>
       </form>
     )}
@@ -70,7 +82,6 @@ function Login({ user, apiKey }) {
     setSendingRequest(true);
     Axios.post(sendLinkUrl, { email, key: apiKey })
       .then(response => {
-        console.log(response);
         setSendingRequest(false);
         setSuccessResponse(true);
       });
@@ -99,10 +110,10 @@ function Login({ user, apiKey }) {
       mx="auto"
       mt={32}
     >
-      <LoginBody 
-        successResponse={successResponse} 
-        apiKeyData={apiKeyData} 
-        sendingRequest={sendingRequest} 
+      <LoginBody
+        successResponse={successResponse}
+        apiKeyData={apiKeyData}
+        sendingRequest={sendingRequest}
         onSubmit={onSubmit}
       />
     </Box>

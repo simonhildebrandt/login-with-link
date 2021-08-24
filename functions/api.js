@@ -43,7 +43,8 @@ app.get("/keys/:key", async (req, res) => {
       if (apiKey) {
         const { clientId } = apiKey;
         const client = await admin.firestore().collection("clients").doc(clientId).get();
-        if (client.exists) return res.json({ name: client.data().name })
+        const data = client.data();
+        if (client.exists) return res.json({ name: data.name, style: data.style })
       };
 
       return res.status(404).json({ error: "No api key or client found" });
@@ -78,7 +79,7 @@ async function createLoginLink(apiKey, email) {
 function emailLink({ email, url, client }) {
   const payload = data => ({ Charset: "UTF-8", Data: data });
 
-  const params = { client_name: client.name, link: url };
+  const params = { client_name: client.name, style: client.style, link: url, host: SITE_URL };
 
   const data = {
     Destination: { ToAddresses: [email] },

@@ -19,8 +19,10 @@ Clicking 'Admin' above will take you to the admin console, allowing you to creat
 When editing client configuration, you'll see the following fields:
 
  - __Client Name__ - assign your project a memorable name, like "Awesome Project".
- - __Key Name__ - each key in your client should have a unique name, like 'production', to what context it's for.
+ - __Key Name__ - each key in your client should have a unique name, like 'production', to indicate what context it's for.
  - __Unique Key__ - as well as a human-readable Key Name, each key has a machine-readable identifier, which is used when accessing the __Login With Link__ service.
  - __Secret__ - the secret used to sign the JWT, which you can then use to verify the JWT came from us.
  - __Return URL__ - the URL of your site, where the authenticated user should end up. (This URL will automatically have the JWT merged into its parameters, as `lwl-token`.)
 - __Login Link__ - below the key details we show the login link you should use - click it to try it out, then copy it to use in your site.
+
+(Additionally, the envelope button displays a preview of the login email we'll send, and there are some stats at the bottom indicating your recent login count, and current login cap.)

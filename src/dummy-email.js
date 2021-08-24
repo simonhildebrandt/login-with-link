@@ -8,11 +8,15 @@ import {
   formatEmailSubject, formatTextEmail, formatHtmlEmail
 } from "../functions/email-template";
 
+import { host } from './utils';
+
 
 function DummyEmail({ client }) {
   const emailParams = {
     client_name: client.name,
-    link: "https://login-with.link"
+    style: client.style,
+    link: "https://login-with.link",
+    host
   };
 
   const content = {

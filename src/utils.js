@@ -7,7 +7,7 @@ export const baseURL = process.env.API_URL || "http://localhost:5001/login-with-
 
 export const privateKey = "6870e340-2465-4da8-96fa-26c3027dc7e3";
 
-export const host = "https://login-with.link";
+export const host = process.env.SITE_URL || "http://localhost:9000";
 
 function authedApiCall(request, params) {
   const data = params ? request(params) : request;
