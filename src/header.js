@@ -10,11 +10,10 @@ import {
   MenuList,
   MenuItem,
   MenuGroup,
-  HStack,
+  HStack
 } from "@chakra-ui/react";
 
-import Gravatar from 'gravatar';
-
+import { ChevronDownIcon } from "@chakra-ui/icons";
 import { logout } from './login-check';
 
 import { navigate } from './router';
@@ -22,19 +21,13 @@ import { navigate } from './router';
 import Logo from './logo';
 
 
-
 function UserTools({ user }) {
   const { email } = user;
-  const gravatarUrl = Gravatar.url(email, { size: 32 });
 
   return <Menu>
-    <MenuButton as={Button}>
-      <Image src={gravatarUrl} />
-    </MenuButton>
+    <MenuButton color="blue.600" fontWeight="bold">{email} <ChevronDownIcon /></MenuButton>
     <MenuList>
-      <MenuGroup title={`${email}`}>
-        <MenuItem onClick={logout}>Logout</MenuItem>
-      </MenuGroup>
+      <MenuItem onClick={logout}>Logout</MenuItem>
     </MenuList>
   </Menu>
 }
@@ -45,7 +38,7 @@ function Header({ user }) {
     py={2}
     justify="space-between"
     align="center"
-    bgColor="gray.600"
+    bgColor="white"
   >
     <Box
       cursor="pointer"

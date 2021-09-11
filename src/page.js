@@ -6,11 +6,11 @@ import Header from './header';
 
 
 const Footer = ({ children }) => {
-  return <Box bg="lightgray" px={4} py={2}>{children}</Box>
+  return <Box bg="lightgray" px={4} py={4}>{children}</Box>
 }
 
 export default function ({ user, children }) {
-  return <Flex direction="column" height="100%">
+  return <Flex direction="column">
     <Header user={user} />
 
     <Box
