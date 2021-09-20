@@ -9,6 +9,9 @@ export const privateKey = "6870e340-2465-4da8-96fa-26c3027dc7e3";
 
 export const host = process.env.SITE_URL || "http://localhost:9000";
 
+export const noop = () => {};
+
+
 function authedApiCall(request, params) {
   const data = params ? request(params) : request;
 
@@ -17,7 +20,7 @@ function authedApiCall(request, params) {
   return Axios.request({ ...data, baseURL, headers: { ...headers, Authorization } })
 }
 
-export function useAuthedApiCall(request) {
+export function useAuthedApiCall(request, { onSuccess = noop } = {}) {
   const [state, setState] = useReducer(
     (state, newState) => ({ ...state, ...newState }),
     { loading: false, finished: false, data: null }
@@ -28,7 +31,8 @@ export function useAuthedApiCall(request) {
     return authedApiCall(request, params)
       .then(res => {
         setState({ data: res.data, loading: false, finished: true });
-      });
+      })
+      .then(onSuccess);
   };
 
   return { ...state, start };

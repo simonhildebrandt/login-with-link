@@ -1,6 +1,19 @@
 import { extendTheme } from "@chakra-ui/react"
 
 const theme = extendTheme({
+  fonts: {
+    body: "Inter"
+  },
+  colors: {
+    brand: {
+      100: '#D6E6FF',
+      300: '#4D94FF',
+      600: "#3182CE"
+    },
+    red: {
+      600: "#E53E3E"
+    }
+  },
   styles: {
     global: {
       h2: {
@@ -26,6 +39,43 @@ const theme = extendTheme({
     }
   },
   components: {
+    Tag: {
+      baseStyle: {
+        fontSize: "14px",
+      }
+    },
+    FormLabel: {
+      baseStyle: {
+        fontSize: "12px"
+      }
+    },
+    ClientMenuItem: {
+      baseStyle: {
+        fontWeight: 700,
+        p: '8px',
+        pl: '12px',
+        borderRadius: '5px'
+      },
+      variants: {
+        selected: {
+          bg: 'brand.100',
+          color: 'brand.300',
+          my: '5px'
+        }
+      }
+    },
+    Button: {
+      sizes: {
+        md: {
+          px: "30px",
+        }
+      },
+      variants: {
+        outline: {
+          borderWidth: "2px",
+        }
+      }
+    },
     Editable: {
       sizes: {
         xl: {
@@ -41,8 +91,8 @@ const theme = extendTheme({
   },
   layerStyles: {
     doubled: {
-      width: ["100%", null, "48%", null, "24%"],
-      mb: 4
+      mb: 4,
+      flexGrow: 1,
     }
   },
   textStyles: {

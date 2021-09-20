@@ -17,17 +17,21 @@ import {
   ModalBody,
   ModalFooter
 } from "@chakra-ui/react"
-import {
-  AddIcon, DeleteIcon, CheckIcon, CloseIcon, EditIcon, EmailIcon
-} from '@chakra-ui/icons';
+import { AddIcon } from '@chakra-ui/icons';
 
 import ApiKeyDetails from './api-key-details';
 import { useAuthedApiCall } from './utils';
 import DummyEmail from './dummy-email';
+import EditableControls from './editable-controls';
 
 
-function ClientDetails({ client, deleteClient }) {
+function ClientDetails({ client, onClientUpdated }) {
   const { id, name } = client;
+
+  const [editableName, setEditableName] = useState("");
+  useEffect(() => {
+    setEditableName(name)
+  }, [name]);
 
   const {
     loading: loadingKeys,
@@ -52,7 +56,7 @@ function ClientDetails({ client, deleteClient }) {
     method: "PUT",
     url: `private/clients/${id}`,
     data: options
-  }));
+  }), {onSuccess: onClientUpdated});
 
   const [showingEmail, setShowingEmail] = useState(false);
   function toggleEmail() { setShowingEmail(_ => !_) };
@@ -60,7 +64,7 @@ function ClientDetails({ client, deleteClient }) {
   const [wideEmail, setWideEmail] = useState(true);
   function toggleWideEmail() { setWideEmail(_ => !_) };
 
-  useEffect(() => { getApiKeys() }, []);
+  useEffect(() => { getApiKeys() }, [id]);
 
   if (!finishedGettingKeys) return "loading";
 
@@ -78,24 +82,7 @@ function ClientDetails({ client, deleteClient }) {
 
   const minEmailWidth = wideEmail ? 600 : 200;
 
-  function EditableControls({ isEditing, onSubmit, onCancel, onEdit }) {
-    return isEditing ? (
-      <ButtonGroup justifyContent="center" size="sm" ml={2}>
-        <IconButton icon={<CheckIcon />} onClick={onSubmit} />
-        <IconButton icon={<CloseIcon />} onClick={onCancel} />
-      </ButtonGroup>
-    ) : (
-      <Flex justifyContent="center" ml={2}>
-        <IconButton
-          size="sm"
-          icon={<EditIcon />}
-          onClick={onEdit}
-        />
-      </Flex>
-    )
-  }
-
-  return <Box bgColor="white" p={2}>
+  return <Box>
     <Modal
       isOpen={showingEmail}
       onClose={toggleEmail}
@@ -120,22 +107,21 @@ function ClientDetails({ client, deleteClient }) {
     <Flex
       align="center"
       justify="space-between"
-      borderColor="gray.200"
-      borderBottomWidth={1}
     >
       <Editable
-        defaultValue={name}
+        value={editableName}
         isPreviewFocusable={false}
         submitOnBlur={false}
         onSubmit={onUpdateName}
+        onChange={setEditableName}
         alignItems="center"
         display="flex"
         size="xl"
-        my={2}
+        fontWeight="700"
       >
         {(props) => (
           <>
-            <EditablePreview size="xl" />
+            <EditablePreview size="xl"/>
             <EditableInput />
             <EditableControls {...props} />
           </>
@@ -145,25 +131,24 @@ function ClientDetails({ client, deleteClient }) {
       {loadingKeys && <Spinner />}
       <ButtonGroup justifyContent="center" size="sm">
 
-        <IconButton
+        <Button
           onClick={toggleEmail}
-          icon={<EmailIcon />}
-          colorScheme="green"
-        />
+          px="20px"
+          variant="outline"
+          borderColor="black"
+        >
+          Preview Email
+        </Button>
         <Button
           isLoading={addingKey}
           onClick={addKey}
-          leftIcon={<AddIcon />}
-          colorScheme="blue"
+          leftIcon={<AddIcon boxSize="10px"/>}
+          bg="#1B73F8"
+          color="white"
+          px="20px"
         >
           Key
         </Button>
-        <IconButton
-          isLoading={addingKey}
-          onClick={deleteClient}
-          icon={<DeleteIcon />}
-          colorScheme="red"
-        />
       </ButtonGroup>
     </Flex>
 

@@ -13,9 +13,13 @@ import {
   ButtonGroup,
   HStack,
   Link,
-  Tag,
+  SimpleGrid,
   Spinner,
-  Tooltip
+  Tooltip,
+  Editable,
+  EditableInput,
+  EditablePreview,
+  Progress,
 } from "@chakra-ui/react"
 
 import { ViewIcon, CopyIcon } from '@chakra-ui/icons'
@@ -25,6 +29,8 @@ import DeleteDialog from './delete-dialog';
 import { useAuthedApiCall, host } from './utils';
 
 import { DEFAULT_LOGIN_LIMIT } from '../functions/constants';
+
+import EditableControls from './editable-controls';
 
 
 function validUrl(url) {
@@ -95,10 +101,6 @@ function ApiKeyDetails({ clientId, apiKey, refresh }) {
     navigator.clipboard.writeText(keyLink);
   }
 
-  function updateName(e) {
-    setNewName(e.target.value);
-  }
-
   function updateUrl(e) {
     setNewUrl(e.target.value);
   }
@@ -128,7 +130,7 @@ function ApiKeyDetails({ clientId, apiKey, refresh }) {
 
   const changingKey = updatingKey || deletingKey;
 
-  return <Box borderColor="teal.500" borderLeftWidth={2} px={3} my={4}>
+  return <Box bg="white" p={4} pt={1} mb={4} borderRadius={8}>
     <DeleteDialog
       noun={"API Key"}
       deleteOpen={deleteOpen}
@@ -136,21 +138,44 @@ function ApiKeyDetails({ clientId, apiKey, refresh }) {
       reallyDelete={reallyDelete}
     />
 
-    <Flex flexWrap="wrap" justify="space-between">
-      <Flex layerStyle="doubled">
-        <FormControl id="name">
-          <FormLabel>Key Name</FormLabel>
-          <Input
-            id={`name-${key}`}
-            isInvalid={nameErrored}
-            type="text" onChange={updateName}
-            placeholder="production"
+    <Flex direction="row" justify="space-between" alignItems="flex-start" mb={6}>
+      <Flex direction="column">
+          <Editable
             value={newName}
-          />
-          <FormHelperText>A human-readable name for this key, like 'production'.</FormHelperText>
-        </FormControl>
+            isPreviewFocusable={false}
+            submitOnBlur={false}
+            onChange={setNewName}
+            alignItems="center"
+            display="flex"
+            size="sm"
+            fontWeight="700"
+          >
+            {(props) => (
+              <>
+                <EditablePreview size="sm"/>
+                <EditableInput />
+                <EditableControls {...props} />
+              </>
+            )}
+          </Editable>
+
+        <Flex fontSize={12} flexGrow={1} align="center" onClick={copyLink} color="gray.500">
+          <Link href={keyLink}>{keyLink}</Link>
+        </Flex>
       </Flex>
-      <Flex layerStyle="doubled">
+
+      <Tooltip label="Recent logins, and your current maximum - for 24 hour window">
+        <Box color="gray.500" mt={3} bg="gray.50" borderRadius={8} overflow="hidden" fontSize="14px">
+          <Box mx={8} my={2}>
+            {loadingLogins ? <Spinner size="xs" mr={2}/> : recentLogins?.count }/{loginLimit} logins
+          </Box>
+          <Progress value={(recentLogins?.count / loginLimit) * 100}/>
+        </Box>
+      </Tooltip>
+    </Flex>
+
+    <SimpleGrid spacing={4} columns={{xl: 3, lg: 2, md: 1}}>
+      <Box>
         <FormControl id="key">
           <FormLabel>Unique Key</FormLabel>
           <Input
@@ -159,14 +184,15 @@ function ApiKeyDetails({ clientId, apiKey, refresh }) {
             readOnly
             type="text"
             value={key}
+            size="sm"
           />
           <FormHelperText>The unique identifier for referring to this key.</FormHelperText>
         </FormControl>
-      </Flex>
-      <Flex layerStyle="doubled">
+      </Box>
+      <Box>
         <FormControl id="secret">
           <FormLabel>Secret</FormLabel>
-          <InputGroup>
+          <InputGroup size="sm">
             <InputLeftAddon onClick={toggleHidden}><ViewIcon /></InputLeftAddon>
             <Input
               id={`secret-${key}`}
@@ -181,8 +207,8 @@ function ApiKeyDetails({ clientId, apiKey, refresh }) {
           </InputGroup>
           <FormHelperText>The secret used to sign your user tokens.</FormHelperText>
         </FormControl>
-      </Flex>
-      <Flex layerStyle="doubled">
+      </Box>
+      <Box>
         <FormControl id="returnUrl">
           <FormLabel>Return URL</FormLabel>
           <Input
@@ -191,42 +217,34 @@ function ApiKeyDetails({ clientId, apiKey, refresh }) {
             type="text"
             onChange={updateUrl}
             value={newUrl}
+            size="sm"
           />
           <FormHelperText>The destination URL we return to, after a user logs in.</FormHelperText>
         </FormControl>
-      </Flex>
-    </Flex>
-    <Flex>
-      <HStack mt={4} flexGrow={1} flexWrap="wrap">
+      </Box>
+    </SimpleGrid>
+    <Flex mt={4}>
+      <HStack mt={4} flexGrow={1} flexWrap="wrap" justifyContent="flex-end">
         <ButtonGroup>
           <Button
             colorScheme="red"
+            variant="outline"
             disabled={changingKey}
             onClick={askDeleteKey}
           >Delete</Button>
           <Button
             colorScheme="red"
+            variant="outline"
             disabled={!changed || changingKey}
             onClick={resetForm}
           >Reset</Button>
           <Button
-            type="submit"
             isLoading={updatingKey}
             colorScheme="blue"
             disabled={!changed || errored || changingKey}
             onClick={saveForm}
           >Save</Button>
         </ButtonGroup>
-        <Tooltip label="Recent logins, and your current maximum - for 24 hour window">
-          <Tag size="lg" color="gray.500"> 
-            {loadingLogins ? <Spinner size="xs" mr={2}/> : recentLogins?.count } logins 
-            / {loginLimit} max
-          </Tag>
-        </Tooltip>
-        <Flex fontSize={20} flexGrow={1} justify="flex-end" align="center">
-          <Link href={keyLink}>{keyLink}</Link>
-          <Button ml={2} variant="outline" onClick={copyLink}><CopyIcon /></Button>
-        </Flex>
       </HStack>
     </Flex>
   </Box>

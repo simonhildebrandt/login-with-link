@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Box, Flex, Button, Spinner } from "@chakra-ui/react"
+import { AddIcon } from '@chakra-ui/icons'
 
 import { authedApiCall, useAuthedApiCall } from './utils';
 
@@ -11,6 +12,7 @@ import Header from './header';
 
 import { navigate } from './router';
 import Loader from './loader';
+import ClientMenuItem from './client-menu-item';
 
 
 export default function ({ user }) {
@@ -25,7 +27,15 @@ export default function ({ user }) {
     url: `private/clients`
   });
 
+  const [selectedClientId, selectClientId] = useState(null);
+  const selectedClient = clients && clients.find(client => client.id === selectedClientId)
+
   useEffect(() => { getClients() }, []);
+  useEffect(() => {
+    if (gotClients && clients && clients.length > 0 && !selectedClient) {
+      selectClientId(clients[0].id);
+    }
+  }, [clients, gotClients]);
 
   const {
     loading: addingClient,
@@ -68,7 +78,7 @@ export default function ({ user }) {
 
     <Header user={user} />
 
-    <Box height="100%" overflow="hidden">
+    <Box height="100%" overflow="hidden" px="72px" pt="59px">
       {clients.length == 0 ? (
         <Flex justify="center" direction="column" align="center">
           <Flex mt={16} mb={8} as="h2" textStyle="h2">Click below to get started!</Flex>
@@ -80,7 +90,7 @@ export default function ({ user }) {
           >Create A New Client</Button>
         </Flex>
       ) : (
-        <Flex direction="column" height="100%" overflow="hidden">
+        <Flex direction="row" height="100%" overflow="hidden">
           <DeleteDialog
             noun={"Client"}
             deleteOpen={deleteOpen}
@@ -88,29 +98,37 @@ export default function ({ user }) {
             reallyDelete={reallyDelete}
           />
 
-          <Flex alignItems="center" p={2}>
-            <Box flexGrow={1} as="h2" textStyle="h2" color="gray.600">
-              Admin &gt; Clients {updating && <Spinner />}
+          <Flex direction="column" borderRightWidth="1px" borderRightColor="#E2E8F0" pr="30px" mr="30px">
+            <Box fontSize="20px" fontWeight="bold" color="black" pr={8}>
+              Clients {updating && <Spinner />}
             </Box>
-            {clients.length > 0 && (
-              <Button
+
+            <Box mt={4} mb={8}>
+              {clients.map(client => (
+                <ClientMenuItem
+                  selected={client.id == selectedClientId}
+                  client={client}
+                  onClick={selectClientId}
+                  key={client.id}
+                  onDelete={askDeleteClient}
+                />
+              ))}
+            </Box>
+
+            <Button
                 isLoading={addingClient}
                 onClick={addNewClient}
-                colorScheme="green"
+                colorScheme="brand"
+                variant="outline"
+                leftIcon={<AddIcon boxSize="10px"/>}
               >Add New Client</Button>
-            )}
           </Flex>
 
-          <Flex direction="column" p={2} overflow="auto">
-            {clients.map(client => (
-              <Box key={client.id}>
-                <ClientDetails
-                  client={client}
-                  deleteClient={() => askDeleteClient(client)}
-                />
-              </Box>
-            ))}
-          </Flex>
+          { selectedClient &&
+            <Flex direction="column" p={2} overflow="auto">
+              <ClientDetails client={selectedClient} onClientUpdated={getClients} />
+            </Flex>
+          }
         </Flex>
       )}
     </Box>
