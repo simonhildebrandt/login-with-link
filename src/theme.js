@@ -12,6 +12,9 @@ const theme = extendTheme({
     },
     red: {
       600: "#E53E3E"
+    },
+    blue: {
+      500: "#1b73f8"
     }
   },
   styles: {
@@ -34,7 +37,8 @@ const theme = extendTheme({
         margin: "8px 0",
       },
       a: {
-        color: "teal.500"
+        color: "blue.500",
+        fontWeight: "700"
       }
     }
   },

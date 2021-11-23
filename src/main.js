@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Box, Flex, Button } from "@chakra-ui/react"
+import { Box, Flex, Button, Image } from "@chakra-ui/react"
 
 import { navigate } from './router';
 import { logout } from './login-check';
@@ -19,38 +19,43 @@ export default function ({ user }) {
 
     <Flex justify="center" mt={8}>
       <Box maxWidth="800px">
-        <Flex justify="center"><Logo /></Flex>
 
-        {user ? (
+        <Box textAlign="center">
+
           <Box
-            my={8}
-            p={4}
-            border="1px"
-            borderColor="gray.200"
-            borderRadius="8px"
-          >
-            <h2>Welcome back!</h2>
-            <p>
-              Logged in users can click 'Admin' above to manage their
-              authentication credentials, or 'Docs', to learn more
-              about how <b>Login With Link</b> works.
-            </p>
-          </Box>
-        ) : (
-          <Box mx="auto" width="xl">
-            <Button
-              width="xl"
-              padding={8}
-              onClick={() => navigate(`/login/${privateKey}`)}
-              my={8}
-              color="white"
-              bg="green.500"
-              fontSize="24px"
-            >Login Now!</Button>
-          </Box>
-        )}
+            fontSize={60}
+            fontWeight={700}
+            lineHeight="60px"
+            mb={6}
+          >Secure your app<br/>in minutes</Box>
 
-        <Flex>
+          <Button
+            colorScheme="blue"
+            shadow="0 0 5px #4c8cc8"
+            onClick={() => navigate(`/docs`)}
+          >Add to your app</Button>
+
+          <Box mt={3} color="gray.400" fontSize="12px">Free! No card required</Box>
+        </Box>
+
+        <Box my={10} position="relative" shadow="xl">
+          <Box
+            position="absolute"
+            width="100%"
+            height="100%"
+            bgGradient="linear(to-b, transparent, white)"
+          />
+            <Image
+              borderRadius="md"
+              borderColor="gray.300"
+              borderWidth="1px"
+              borderStyle="solid"
+              src="dashboard.png"
+            />
+        </Box>
+
+
+        <Flex mt={16}>
           <Box><Markdown content={content} /></Box>
           <Box>{/* Coffee Link? */}</Box>
         </Flex>
