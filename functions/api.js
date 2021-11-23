@@ -17,6 +17,8 @@ AWS.config.update({ region: process.env.AWS_REGION });
 const API_URL = process.env.API_URL || "http://localhost:5001/login-with-link/us-central1";
 const SITE_URL = process.env.SITE_URL || "http://localhost:9000";
 
+const DEV_MODE = process.env.DEV_MODE;
+
 const app = express();
 
 app.use(cors({ origin: true }));
@@ -126,7 +128,11 @@ async function sendLink(key, email) {
 
   const url = `${API_URL}/api/done/${link.uuid}`;
 
-  return emailLink({ email, url, client });
+  if (DEV_MODE) {
+    console.log("Login link:", url)
+  } else {
+    return emailLink({ email, url, client });
+  }
 }
 
 app.post("/send-link", async (req, res) => {

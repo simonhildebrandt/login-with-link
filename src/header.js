@@ -43,20 +43,30 @@ function Header({ user }) {
     <Box
       cursor="pointer"
       onClick={() => navigate("/")}
-      bgColor="gray.50"
+      bgColor="gray.10"
       px={2}
       borderRadius={8}
     >
       <Logo width={100} height={40} />
     </Box>
 
-    <Flex align="center">
-      <HStack spacing="4" pr="4">
-        <Button onClick={() => navigate("/docs")} variant="link">Docs</Button>
+    <Flex ml={10} align="center" grow={1} justify="space-between">
+      <HStack spacing="4" pr="4" grow={1}>
+        <Button onClick={() => navigate("/docs")} variant="link">Documentation</Button>
+        <Button onClick={() => navigate("/docs")} variant="link">Pricing</Button>
         {user && <Button onClick={() => navigate("/admin")} variant="link">Admin</Button>}
       </HStack>
 
-      {user && <UserTools user={user} />}
+      {
+        user ? (
+          <UserTools user={user}/>
+        ) : (
+          !hideLoginButton && <Button
+            colorScheme="blue"
+            shadow="0 0 5px #4c8cc8"
+            onClick={() => navigate("/login/6870e340-2465-4da8-96fa-26c3027dc7e3")}
+          >Login/Register</Button>
+        )}
     </Flex>
   </Flex>
 }

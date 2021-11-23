@@ -10,15 +10,13 @@ const Footer = ({ children }) => {
 }
 
 export default function ({ user, children }) {
-  return <Flex direction="column">
+  return <Flex direction="column" height="100%">
     <Header user={user} />
 
     <Box
       px={4}
       py={2}
       flexGrow={1}
-      flexShrink={1}
-      overflowY="auto"
       width="100%"
     >
       <Box m="auto" maxWidth="800px" pb={16}>{children}</Box>

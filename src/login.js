@@ -1,13 +1,15 @@
 import React, { useState, useEffect, useCallback } from 'react';
 
 import {
-  Box, Flex,
+  Box,
+  Flex,
   FormControl,
   FormLabel,
   FormHelperText,
   Input,
   Button,
-  Spinner
+  Spinner,
+  Link
 } from "@chakra-ui/react"
 
 import Axios from 'axios';
@@ -98,17 +100,18 @@ function Login({ user, apiKey }) {
   if (apiError) return <ErrorPage message="Error loading information about this client." />;
   if (!apiKeyData) return <Loader text="Loading client..." />;
 
-  return <Page user={user}>
+  return <Box
+      minWidth={500}
+      mx="auto"
+      w="50%"
+      pt={32}
+    >
     <Box
       borderWidth={1}
       borderColor="gray.200"
       borderStyle="solid"
-      minWidth={500}
       borderRadius={8}
       p={8}
-      w="50%"
-      mx="auto"
-      mt={32}
     >
       <LoginBody
         successResponse={successResponse}
@@ -116,9 +119,12 @@ function Login({ user, apiKey }) {
         sendingRequest={sendingRequest}
         onSubmit={onSubmit}
       />
-    </Box>
 
-  </Page>
+    </Box>
+    <Box mt={2} textAlign="right" color="gray.300" fontSize="sm">
+      Authentication provided by <Link href="https://login-with.link">Login With Link</Link>
+    </Box>
+  </Box>
 }
 
 Login.displayName = "Login";
