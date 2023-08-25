@@ -1,13 +1,13 @@
-import { useState, useCallback, useReducer, useEffect } from 'react';
+import { useReducer } from 'react';
 
 import Axios from 'axios';
 import { getToken } from './login-check';
 
-export const baseURL = process.env.API_URL || "http://localhost:5001/login-with-link/us-central1/";
+export const baseURL = API_URL || "http://localhost:5001/login-with-link/us-central1/";
 
 export const privateKey = "6870e340-2465-4da8-96fa-26c3027dc7e3";
 
-export const host = process.env.SITE_URL || "http://localhost:9000";
+export const host = SITE_URL || "http://localhost:9000";
 
 export const noop = () => {};
 

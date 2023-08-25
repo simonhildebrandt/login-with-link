@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Box, Flex, Button, Spinner } from "@chakra-ui/react"
 import { AddIcon } from '@chakra-ui/icons'
 
-import { authedApiCall, useAuthedApiCall } from './utils';
+import { useAuthedApiCall } from './utils';
 
 import ClientDetails from './client-details';
 

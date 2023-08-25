@@ -2,8 +2,6 @@ import React from 'react';
 
 import ReactMarkdown from 'react-markdown';
 
-import Logo from './logo';
-
 
 const renderers = {
   // heading: ({ children }) => <Box textStyle="h1">{children}</Box>,

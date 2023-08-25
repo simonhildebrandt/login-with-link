@@ -2,8 +2,8 @@ import React from 'react';
 
 import Page from './page';
 
-import about from '../content/about.md';
-import docs from '../content/docs.md';
+import about from '../content/about.md.txt';
+import docs from '../content/docs.md.txt';
 
 import Markdown from './markdown';
 

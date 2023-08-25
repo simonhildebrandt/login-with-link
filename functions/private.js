@@ -24,9 +24,9 @@ app.use((req, res, next) => {
 app.use((req, res, next) => {
   const token = req.get("Authorization");
   checkToken(token, authKey).then(
-    result => {
-      if (result == 'token-valid') {
-        req.user = jwt.decode(token);
+    ({status, data}) => {
+      if (status == 'token-valid') {
+        req.user = data;
         next()
       } else {
         res.status(401).json({ message: "Valid token required" })

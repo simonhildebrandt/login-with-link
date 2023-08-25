@@ -25,11 +25,10 @@ function checkToken(token, apiKey) {
 
       const { secret } = apiKeyData;
       try {
-        jwt.verify(token, secret);
+        return { status: 'token-valid', data: jwt.verify(token, secret) };
       } catch(error) {
-        return 'token-invalid';
+        return { status: 'token-invalid' };
       }
-      return 'token-valid';
     }
   )
 }

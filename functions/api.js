@@ -16,6 +16,7 @@ AWS.config.update({ region: process.env.AWS_REGION });
 
 const API_URL = process.env.API_URL || "http://localhost:5001/login-with-link/us-central1";
 const SITE_URL = process.env.SITE_URL || "http://localhost:9000";
+const SERVICE_ACCOUNT = "firebase-adminsdk-co5u1@login-with-link.iam.gserviceaccount.com";
 
 const DEV_MODE = process.env.DEV_MODE;
 
@@ -149,10 +150,19 @@ app.post("/send-link", async (req, res) => {
     });
 });
 
-const jwtDefaults = {
-  issuer: "login-with-link",
-  audience: ["login-with-link"]
-};
+
+// const jwtDefaults = {
+//   issuer: SERVICE_ACCOUNT,
+//   subject: SERVICE_ACCOUNT,
+//   // algorithm: "RS256",
+//   audience: "https://identitytoolkit.googleapis.com/google.identity.identitytoolkit.v1.IdentityToolkit"
+// };
+
+
+// const jwtDefaults = {
+//   issuer: "login-with-link",
+//   audience: ["login-with-link"]
+// };
 
 app.get("/done/:id", async (req, res) => {
   return getRecordByKeyValue("loginLinks", "uuid", req.params.id)
@@ -167,6 +177,8 @@ app.get("/done/:id", async (req, res) => {
       const apiKeyData = await getRecordByKeyValue("apiKeys", "key", apiKey)
       // TODO append 'followedAt'
 
+      // token = admin.auth().createCustomToken(email);
+
       token = jwt.sign({ email }, apiKeyData.secret, { ...jwtDefaults, subject: userId });
       res.redirect(returnUrl + "?lwl-token=" + token);
     })
@@ -180,14 +192,14 @@ app.get("/check", async (req, res) => {
   const { token, apiKey } = req.query;
 
   checkToken(token, apiKey).then(
-    result => {
-      switch (result) {
+    ({status, data}) => {
+      switch (status) {
         case 'token-or-key-missing':
           res.status(401).json({ message: "No token" })
         case 'token-invalid':
           res.status(401).json({ message: "failed token check" })
         case 'token-valid':
-          res.status(200).json({ message: "valid token" })
+          res.status(200).json({ message: "valid token", user: data })
         default:
           res.status(500).end();
       }

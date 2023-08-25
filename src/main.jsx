@@ -1,17 +1,12 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React from 'react';
 import { Box, Flex, Button, Image } from "@chakra-ui/react"
 
 import { navigate } from './router';
-import { logout } from './login-check';
-
-import { privateKey } from './utils';
-
-import Logo from './logo';
 
 import Page from './page';
 import Markdown from './markdown';
 
-import content from '../content/main.md';
+import content from '../content/main.md.txt';
 
 
 export default function ({ user }) {

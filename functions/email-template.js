@@ -1,4 +1,4 @@
-let ejs = require('ejs');
+let ejs = require('ejs/ejs.js');
 //const ejsLint = require('ejs-lint');
 
 const htmlEmailTemplate = `<div width="100%" height="100%" style="background-color: #DDDDDD; padding: 64px 16px; font-family: sans-serif">

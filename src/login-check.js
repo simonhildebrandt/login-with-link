@@ -1,6 +1,6 @@
 import Axios from 'axios';
-import jwt from "jsonwebtoken";
 import { baseURL } from './utils';
+import { getAuth, signInWithCustomToken } from "./firebase";
 
 const storageKey = "lwlToken";
 const tokenCheckUrl = baseURL + "api/check";
@@ -13,7 +13,10 @@ export async function loginCheck({ key: apiKey }) {
     return Axios.get(
       tokenCheckUrl,
       { params: { token, apiKey } }
-    ).then(() => resolve({ state: "loggedIn", user: jwt.decode(token) }))
+    ).then(({data}) => {
+      console.log(data);
+      resolve({ state: "loggedIn", user: data.user })
+    })
       .catch(() => resolve({ state: "loggedOut", error: true }));
   });
 }
@@ -36,4 +39,13 @@ export function logout() {
 
 export function getToken() {
   return localStorage.getItem(storageKey);
+}
+
+window.validateToken = function() {
+  signInWithCustomToken(getAuth(), getToken()).then((userCredential) => {
+    console.log("signed in with ", userCredential);
+  })
+  .catch((error) => {
+    console.log("failed to sign in with ", error);
+  });
 }
