@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {
   Box,
+  Checkbox,
   Flex,
   FormControl,
   FormLabel,
@@ -43,12 +44,13 @@ function validUrl(url) {
 }
 
 function ApiKeyDetails({ clientId, apiKey, refresh }) {
-  const { name, key, returnUrl, secret, loginLimit = DEFAULT_LOGIN_LIMIT } = apiKey;
+  const { name, key, returnUrl, secret, exchange = false, loginLimit = DEFAULT_LOGIN_LIMIT } = apiKey;
 
   const keyLink = `${host}/#/login/${key}`;
 
   const [newName, setNewName] = useState("");
   const [newUrl, setNewUrl] = useState("");
+  const [newExchange, setNewExchange] = useState(false);
 
   const {
     loading: updatingKey,
@@ -58,7 +60,8 @@ function ApiKeyDetails({ clientId, apiKey, refresh }) {
     url: `private/clients/${clientId}/keys/${key}`,
     data: {
       name: newName,
-      returnUrl: newUrl
+      returnUrl: newUrl,
+      exchange: newExchange
     }
   });
 
@@ -87,6 +90,7 @@ function ApiKeyDetails({ clientId, apiKey, refresh }) {
   useEffect(() => {
     setNewName(name);
     setNewUrl(returnUrl);
+    setNewExchange(exchange);
   }, []);
 
   const [hidden, setHidden] = useState(true);
@@ -105,16 +109,25 @@ function ApiKeyDetails({ clientId, apiKey, refresh }) {
     setNewUrl(e.target.value);
   }
 
+  function updateExchange(e) {
+    setNewExchange(e.target.checked);
+  }
+
+  function resetName() {
+    setNewName(name);
+  }
+
   function resetForm() {
     setNewName(name);
     setNewUrl(returnUrl);
+    setNewExchange(exchange);
   }
 
   function saveForm() {
     updateKey().then(refresh);
   }
 
-  const changed = (name !== newName) || (returnUrl != newUrl);
+  const changed = (name !== newName) || (returnUrl != newUrl) || (exchange != newExchange);
   const nameErrored = (newName == "");
   const urlErrored = (newUrl == "") || !validUrl(newUrl);
   const errored = nameErrored || urlErrored;
@@ -145,6 +158,7 @@ function ApiKeyDetails({ clientId, apiKey, refresh }) {
             isPreviewFocusable={false}
             submitOnBlur={false}
             onChange={setNewName}
+            onCancel={resetName}
             alignItems="center"
             display="flex"
             size="sm"
@@ -220,6 +234,17 @@ function ApiKeyDetails({ clientId, apiKey, refresh }) {
             size="sm"
           />
           <FormHelperText>The destination URL we return to, after a user logs in.</FormHelperText>
+        </FormControl>
+      </Box>
+      <Box>
+        <FormControl id="exchange">
+          <FormLabel>Code exchange?</FormLabel>
+          <Checkbox
+            id={`exchange-${key}`}
+            onChange={updateExchange}
+            isChecked={newExchange}
+          />
+          <FormHelperText>Use the more complex (but more secure) code exchange process.</FormHelperText>
         </FormControl>
       </Box>
     </SimpleGrid>

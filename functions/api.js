@@ -71,6 +71,7 @@ async function createLoginLink(apiKey, email) {
       email,
       userId: user.id,
       apiKey: apiKey.key,
+      exchange: apiKey.exchange,
       uuid: uuidv4(),
       returnUrl: apiKey.returnUrl,
       followedAt: [],
@@ -164,14 +165,22 @@ const jwtDefaults = {
   audience: ["login-with-link"]
 };
 
+function buildJWT(email, apiKeyData, userId) {
+  return jwt.sign({ email }, apiKeyData.secret, { ...jwtDefaults, subject: userId });
+}
+
 app.get("/done/:id", async (req, res) => {
-  return getRecordByKeyValue("loginLinks", "uuid", req.params.id)
+  const linkId = req.params.id;
+
+  return getRecordByKeyValue("loginLinks", "uuid", linkId)
     .then(async link => {
       const {
+        id,
         returnUrl,
         userId,
         email,
-        apiKey
+        apiKey,
+        exchange = false
       } = link;
 
       const apiKeyData = await getRecordByKeyValue("apiKeys", "key", apiKey)
@@ -179,13 +188,41 @@ app.get("/done/:id", async (req, res) => {
 
       // token = admin.auth().createCustomToken(email);
 
-      token = jwt.sign({ email }, apiKeyData.secret, { ...jwtDefaults, subject: userId });
-      res.redirect(returnUrl + "?lwl-token=" + token);
+      let destination;
+      if (exchange) {
+        exchangeCode = uuidv4();
+        console.log('updating', id);
+        await admin.firestore().collection("loginLinks").doc(id).update({exchangeCode});
+        destination = returnUrl + "?lwl-code=" + exchangeCode;
+      } else {
+        destination = returnUrl + "?lwl-token=" + buildJWT(email, apiKeyData, userId);
+      }
+      res.redirect(destination);
     })
     .catch(error => {
       console.log(error)
       res.redirect(`${SITE_URL}/login_error?error=no-link-found`);
     });
+});
+
+app.get("/exchange/:code", async (req, res) => {
+  const code = req.params.code;
+  console.log({code})
+  return getRecordByKeyValue("loginLinks", "exchangeCode", code).then(
+    async (link) => {
+      const { email, userId, apiKey } = link;
+
+      console.log(code);
+      const apiKeyData = await getRecordByKeyValue("apiKeys", "key", apiKey);
+      return res.status(200).json({token: buildJWT(email, apiKeyData, userId)})
+    }
+  ).catch(
+    error => {
+      console.error(error);
+      return res.status(404).json({message: 'code not found'})
+    }
+  );
+  // res.status(404).json({message: 'code not found'})
 });
 
 app.get("/check", async (req, res) => {

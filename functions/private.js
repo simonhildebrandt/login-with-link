@@ -151,8 +151,8 @@ app.put("/clients/:clientId/keys/:key", accessCheck, async (req, res) => {
     .then(qs => {
       if (qs.size !== 1) throw (new Error("Didn't find a matching key"))
 
-      const { name, returnUrl } = req.body;
-      qs.docs[0].ref.update({ name, returnUrl }).then(() => {
+      const { name, returnUrl, exchange } = req.body;
+      qs.docs[0].ref.update({ name, returnUrl, exchange }).then(() => {
         res.json({ Message: "Updated" });
       }).catch(() => res.status(500).json({ message: "update failed" }));
     })
