@@ -13,15 +13,25 @@ jobs:
           npm install --global yarn firebase-tools
       - name: Check out repository code
         uses: actions/checkout@v3
-      - name: Install dependencies
+      - name: Install web dependencies
         run: |
           yarn install --frozen-lockfile
       - name: Build web
         run: |
           yarn build_staging
-      - name: Deploy to Firebase
+      - name: Deploy web to Firebase
         run: |
           firebase use staging
           firebase deploy --only hosting
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+      - name: Install function dependencies
+        working-directory: ./functions
+        run: |
+          yarn install --frozen-lockfile
+      - name: Deploy web to Firebase
+        run: |
+          firebase use staging
+          firebase deploy --only functions
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
