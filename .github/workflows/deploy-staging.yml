@@ -1,7 +1,5 @@
 name: Deploy LwL to staging
 on: [push]
-env:
-  FIREBASE_TOKEN: ${{ vars.FIREBASE_TOKEN }}
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -25,3 +23,5 @@ jobs:
         run: |
           firebase use staging
           firebase deploy --only hosting
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
