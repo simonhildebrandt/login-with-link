@@ -26,6 +26,6 @@ When editing client configuration, you'll see the following fields:
  - __Secret__ - the secret used to sign the JWT, which you can then use to verify the JWT came from us.
  - __Return URL__ - the URL of your site, where the authenticated user should end up. (This URL will automatically have the JWT merged into its parameters, as `lwl-token`.)
 - __Login Link__ - below the key details we show the login link you should use - click it to try it out, then copy it to use in your site.
-- __Code exchange?__ - to make a small sacrifice of simiplicity for security, activate code exchange mode for the PKCE-style code exchange mentioned above. Instead of a token in the `lwl-token` URL parameter, you'll get `lwl-code`, which contains a value that can then be *exchanged* for a token (JWT), at `https://login-with.link/exchange/<code>`.
+- __Code exchange?__ - to make a small sacrifice of simiplicity for security, activate code exchange mode for the PKCE-style code exchange mentioned above. Instead of a token in the `lwl-token` URL parameter, you'll get `lwl-code`, which contains a value that can then be *exchanged* for a token (JWT), at `https://login-with.link/api/exchange/<code>`.
 
 (Additionally, the envelope button displays a preview of the login email we'll send, and there are some stats at the bottom indicating your recent login count, and current login cap.)
