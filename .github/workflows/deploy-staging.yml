@@ -19,3 +19,7 @@ jobs:
       - name: Build web
         run: |
           yarn build_staging
+      - name: Deploy to Firebase
+        run: |
+          firebase use staging
+          firebase deploy --only hosting
