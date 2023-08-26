@@ -7,9 +7,10 @@
   "license": "MIT",
   "scripts": {
     "serve": "live-server --port=9000 dev/",
-    "build": "yarn esbuild src/index.jsx --bundle --outfile=dev/index.js --define:SITE_URL=false --define:API_URL=false",
-    "watch": "yarn esbuild src/index.jsx --bundle --outfile=dev/index.js --watch --define:SITE_URL=false --define:API_URL=false",
-    "build_prod": "yarn esbuild src/index.jsx --bundle --outfile=public/index.js --define:SITE_URL=\"https://login-with.link/\" --define:API_URL=\"https://login-with.link/\"",
+    "build": "yarn esbuild src/index.jsx --bundle --outfile=dev/index.js --define:ENV=\"'development'\"",
+    "watch": "yarn esbuild src/index.jsx --bundle --outfile=dev/index.js --watch --define:ENV=\"'development'\"",
+    "build_staging": "yarn esbuild src/index.jsx --bundle --outfile=public/index.js --define:ENV=\"'staging'\"",
+    "build_prod": "yarn esbuild src/index.jsx --bundle --outfile=public/index.js--define:ENV=\"'production'\"",
     "deploy_functions": "firebase deploy --only functions",
     "deploy_hosting": "yarn build_prod && yarn firebase deploy --only hosting",
     "deploy_all": "yarn deploy_functions && yarn deploy_hosting",
@@ -45,6 +46,6 @@
     "watchify": "^3.11.1"
   },
   "devDependencies": {
-    "firebase-tools": "^9.1.0"
+    "firebase-tools": "^12.5.2"
   }
 }

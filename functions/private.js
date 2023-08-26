@@ -8,6 +8,7 @@ const cors = require('cors');
 const { checkToken } = require("./utils");
 const { LOGIN_WINDOW } = require('./constants');
 
+
 const authKey = "6870e340-2465-4da8-96fa-26c3027dc7e3";
 
 const app = express();

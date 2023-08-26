@@ -16,7 +16,7 @@ AWS.config.update({ region: process.env.AWS_REGION });
 
 const API_URL = process.env.API_URL || "http://localhost:5001/login-with-link/us-central1";
 const SITE_URL = process.env.SITE_URL || "http://localhost:9000";
-const SERVICE_ACCOUNT = "firebase-adminsdk-co5u1@login-with-link.iam.gserviceaccount.com";
+// const SERVICE_ACCOUNT = "firebase-adminsdk-co5u1@login-with-link.iam.gserviceaccount.com";
 
 const DEV_MODE = process.env.DEV_MODE;
 
@@ -159,10 +159,10 @@ app.post("/send-link", async (req, res) => {
 // };
 
 
-// const jwtDefaults = {
-//   issuer: "login-with-link",
-//   audience: ["login-with-link"]
-// };
+const jwtDefaults = {
+  issuer: "login-with-link",
+  audience: ["login-with-link"]
+};
 
 app.get("/done/:id", async (req, res) => {
   return getRecordByKeyValue("loginLinks", "uuid", req.params.id)

@@ -3,11 +3,28 @@ import { useReducer } from 'react';
 import Axios from 'axios';
 import { getToken } from './login-check';
 
-export const baseURL = API_URL || "http://localhost:5001/login-with-link/us-central1/";
+const environment = ENV || 'development';
+
+const environments = {
+  development: {
+    baseURL: "http://localhost:5001/login-with-link/us-central1/",
+    host:    "http://localhost:9000"
+  },
+  staging: {
+    baseURL: "https://us-central1-login-with-link-staging.cloudfunctions.net/",
+    host:    "https://login-with-link-staging.web.app/"
+  },
+  production: {
+    baseURL: "https://login-with.link/",
+    host:    "https://login-with.link/"
+  }
+}
+
+
+export const { baseURL, host } = environments[environment];
 
 export const privateKey = "6870e340-2465-4da8-96fa-26c3027dc7e3";
 
-export const host = SITE_URL || "http://localhost:9000";
 
 export const noop = () => {};
 
