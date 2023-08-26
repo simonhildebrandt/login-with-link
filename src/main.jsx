@@ -22,7 +22,7 @@ export default function ({ user }) {
             fontWeight={700}
             lineHeight="60px"
             mb={6}
-          >Secure your app<br/>in minutes!</Box>
+          >Secure your app<br/>in minutes</Box>
 
           <Button
             colorScheme="blue"
