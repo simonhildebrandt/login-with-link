@@ -71,7 +71,7 @@ async function createLoginLink(apiKey, email) {
       email,
       userId: user.id,
       apiKey: apiKey.key,
-      exchange: apiKey.exchange,
+      exchange: apiKey.exchange || false,
       uuid: uuidv4(),
       returnUrl: apiKey.returnUrl,
       followedAt: [],
