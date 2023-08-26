@@ -1,5 +1,9 @@
 {
   "projects": {
-    "default": "login-with-link-staging"
-  }
+    "default": "login-with-link-staging",
+    "staging": "login-with-link-staging",
+    "production": "login-with-link"
+  },
+  "targets": {},
+  "etags": {}
 }

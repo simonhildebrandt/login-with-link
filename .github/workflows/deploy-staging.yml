@@ -8,6 +8,11 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 16.x
-      - name: Install firebbase-tools
+      - name: Install firebase-tools
         run: |
-          npm install --global firebase-tools
+          npm install --global yarn firebase-tools
+      - name: Check out repository code
+        uses: actions/checkout@v3
+      - name: Install dependencies
+        run: |
+          yarn install --frozen-lockfile
