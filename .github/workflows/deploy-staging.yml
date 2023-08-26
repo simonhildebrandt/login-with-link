@@ -16,3 +16,6 @@ jobs:
       - name: Install dependencies
         run: |
           yarn install --frozen-lockfile
+      - name: Build web
+        run: |
+          yarn build_staging
