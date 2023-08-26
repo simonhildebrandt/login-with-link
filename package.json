@@ -10,7 +10,7 @@
     "build": "yarn esbuild src/index.jsx --bundle --outfile=dev/index.js --define:ENV=\"'development'\"",
     "watch": "yarn esbuild src/index.jsx --bundle --outfile=dev/index.js --watch --define:ENV=\"'development'\"",
     "build_staging": "yarn esbuild src/index.jsx --bundle --outfile=public/index.js --define:ENV=\"'staging'\"",
-    "build_production": "yarn esbuild src/index.jsx --bundle --outfile=public/index.js--define:ENV=\"'production'\"",
+    "build_production": "yarn esbuild src/index.jsx --bundle --outfile=public/index.js --define:ENV=\"'production'\"",
     "deploy_functions": "firebase deploy --only functions",
     "deploy_hosting": "yarn build_production && yarn firebase deploy --only hosting",
     "deploy_all": "yarn deploy_functions && yarn deploy_hosting",
