@@ -1,5 +1,7 @@
 name: Deploy LwL to staging
 on: [push]
+env:
+  FIREBASE_TOKEN: ${{ vars.FIREBASE_TOKEN }}
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -8,7 +10,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 16.x
-      - name: Install firebase-tools
+      - name: Install yarn and firebase-tools
         run: |
           npm install --global yarn firebase-tools
       - name: Check out repository code
