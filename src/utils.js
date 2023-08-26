@@ -11,8 +11,8 @@ const environments = {
     host:    "http://localhost:9000"
   },
   staging: {
-    baseURL: "https://us-central1-login-with-link-staging.cloudfunctions.net/",
-    host:    "https://login-with-link-staging.web.app/"
+    baseURL: "https://staging.login-with.link/",
+    host:    "https://staging.login-with.link/"
   },
   production: {
     baseURL: "https://login-with.link/",
