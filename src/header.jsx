@@ -53,7 +53,7 @@ function Header({ user }) {
     <Flex ml={10} align="center" grow={1} justify="space-between">
       <HStack spacing="4" pr="4" grow={1}>
         <Button onClick={() => navigate("/docs")} variant="link">Documentation</Button>
-        <Button onClick={() => navigate("/docs")} variant="link">Pricing</Button>
+        {/* <Button onClick={() => navigate("/docs")} variant="link">Pricing</Button> */}
         {user && <Button onClick={() => navigate("/admin")} variant="link">Admin</Button>}
       </HStack>
 

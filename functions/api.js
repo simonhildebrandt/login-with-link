@@ -58,7 +58,7 @@ app.get("/keys/:key", async (req, res) => {
     });
 });
 
-async function createLoginLink(apiKey, email) {
+async function createLoginLink(apiKey, email, state) {
   let user = await getRecordByKeyValue("users", "email", email);
   if (!user) {
     user = await admin.firestore().collection('users')
@@ -69,6 +69,7 @@ async function createLoginLink(apiKey, email) {
   return admin.firestore().collection('loginLinks')
     .add({
       email,
+      state,
       userId: user.id,
       apiKey: apiKey.key,
       exchange: apiKey.exchange || false,
@@ -100,7 +101,7 @@ function emailLink({ email, url, client }) {
   return new AWS.SES({ apiVersion: '2010-12-01' }).sendEmail(data).promise();
 }
 
-async function sendLink(key, email) {
+async function sendLink(key, email, state) {
   const apiKey = await getRecordByKeyValue("apiKeys", "key", key)
     .catch(error => Promise.reject({ error, status: 404, message: "Error loading api key data" }));
 
@@ -125,7 +126,7 @@ async function sendLink(key, email) {
   if (!clientRef.exists) throw { status: 404, message: "No client found" };
   const client = clientRef.data();
 
-  const link = await createLoginLink(apiKey, email);
+  const link = await createLoginLink(apiKey, email, state);
   if (!link) throw { message: "Error creating link" };
 
   const url = `${API_URL}/api/done/${link.uuid}`;
@@ -138,11 +139,11 @@ async function sendLink(key, email) {
 }
 
 app.post("/send-link", async (req, res) => {
-  const { email, key } = req.body;
+  const { email, key, state } = req.body;
   if (!email || !key)
     return res.status(404).json({ error: "Email address and api key required" });
 
-  sendLink(key, email)
+  sendLink(key, email, state)
     .then(_ => res.json({ message: "success" }))
     .catch(error => {
       console.error({ error });
@@ -180,6 +181,7 @@ app.get("/done/:id", async (req, res) => {
         userId,
         email,
         apiKey,
+        state = null,
         exchange = false
       } = link;
 
@@ -189,13 +191,15 @@ app.get("/done/:id", async (req, res) => {
       // token = admin.auth().createCustomToken(email);
 
       let destination;
+      let stateClause = state !== null ? `&lwl-state=${state}` : '';
+
       if (exchange) {
         exchangeCode = uuidv4();
         console.log('updating', id);
         await admin.firestore().collection("loginLinks").doc(id).update({exchangeCode});
-        destination = returnUrl + "?lwl-code=" + exchangeCode;
+        destination = returnUrl + "?lwl-code=" + exchangeCode + stateClause;
       } else {
-        destination = returnUrl + "?lwl-token=" + buildJWT(email, apiKeyData, userId);
+        destination = returnUrl + "?lwl-token=" + buildJWT(email, apiKeyData, userId) + stateClause;
       }
       res.redirect(destination);
     })
@@ -207,14 +211,14 @@ app.get("/done/:id", async (req, res) => {
 
 app.get("/exchange/:code", async (req, res) => {
   const code = req.params.code;
-  console.log({code})
+
   return getRecordByKeyValue("loginLinks", "exchangeCode", code).then(
     async (link) => {
-      const { email, userId, apiKey } = link;
+      const { email, userId, apiKey, state = null } = link;
 
       console.log(code);
       const apiKeyData = await getRecordByKeyValue("apiKeys", "key", apiKey);
-      return res.status(200).json({token: buildJWT(email, apiKeyData, userId)})
+      return res.status(200).json({token: buildJWT(email, apiKeyData, userId), state})
     }
   ).catch(
     error => {
@@ -222,7 +226,6 @@ app.get("/exchange/:code", async (req, res) => {
       return res.status(404).json({message: 'code not found'})
     }
   );
-  // res.status(404).json({message: 'code not found'})
 });
 
 app.get("/check", async (req, res) => {

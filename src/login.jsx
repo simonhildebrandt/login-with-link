@@ -74,7 +74,7 @@ function LoginBody({successResponse, apiKeyData, onSubmit, sendingRequest}) {
 }
 
 
-function Login({ user, apiKey }) {
+function Login({ apiKey, state }) {
   const [apiKeyData, setApiKeyData] = useState(null);
   const [sendingRequest, setSendingRequest] = useState(false);
   const [successResponse, setSuccessResponse] = useState(false);
@@ -82,8 +82,8 @@ function Login({ user, apiKey }) {
 
   const onSubmit = useCallback((email) => {
     setSendingRequest(true);
-    Axios.post(sendLinkUrl, { email, key: apiKey })
-      .then(response => {
+    Axios.post(sendLinkUrl, { email, key: apiKey, state })
+      .then(_ => {
         setSendingRequest(false);
         setSuccessResponse(true);
       });

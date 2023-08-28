@@ -14,6 +14,8 @@ This site uses __Login With Link__ itself for authentication, so the simplest wa
 
 The remaining step is on the server. Verifying the signature as [Express](https://expressjs.com/) [middleware](https://expressjs.com/en/guide/using-middlewa) is demonstrated in [private.js](https://github.com/simonhildebrandt/login-with-link/blob/master/functions/private.js#L17), using the `checkToken` function in [utils.js](https://github.com/simonhildebrandt/login-with-link/blob/master/functions/utils.js#L21) - all based on the [jsonwebtoken](https://www.npmjs.com/package/jsonwebtoken) package.
 
+(__Login With Link__ also supports passing state, similar to how OAuth does it; passing a `state` URL parameter to our login page will result in that value being returned to you as a `lwl-state` URL parameter in the final stage of the exchange, and in the data delivered in the code check action.)
+
 ### Configuration
 
 Clicking 'Admin' above will take you to the admin console, allowing you to create client configurations for each of your projects. For each client you can create multiple keys, making it easier to separate credentials for different environments - say, production, staging and development.
