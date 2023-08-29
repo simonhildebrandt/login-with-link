@@ -209,8 +209,10 @@ app.get("/done/:id", async (req, res) => {
     });
 });
 
-app.get("/exchange/:code", async (req, res) => {
-  const code = req.params.code;
+app.post("/exchange", async (req, res) => {
+  const {code, secret} = req.body;
+
+  if (!code || !secret) return res.status(400).json({message: "code and secret required"});
 
   return getRecordByKeyValue("loginLinks", "exchangeCode", code).then(
     async (link) => {
@@ -218,6 +220,13 @@ app.get("/exchange/:code", async (req, res) => {
 
       console.log(code);
       const apiKeyData = await getRecordByKeyValue("apiKeys", "key", apiKey);
+
+      const { exchangeSecret } = apiKeyData;
+
+      if (exchangeSecret !== secret) {
+        return res.status(400).json({message: "secret doesn't match the api key used to creat code"});
+      }
+
       return res.status(200).json({token: buildJWT(email, apiKeyData, userId), state})
     }
   ).catch(

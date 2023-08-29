@@ -22,8 +22,8 @@ import theme from './theme';
 handleToken();
 
 
-function ShowPage({ showView, user, apiKey, state }) {
-  if (showView === 'login') return <Login user={user} apiKey={apiKey} state={state} />;
+function ShowPage({ showView, user, apiKey, state, email }) {
+  if (showView === 'login') return <Login user={user} apiKey={apiKey} state={state} email={email} />;
   if (showView === 'admin') return <Admin user={user} />;
   if (showView === 'main') return <Main user={user} />;
   return <Pages user={user} page={showView} />;
@@ -32,9 +32,9 @@ function ShowPage({ showView, user, apiKey, state }) {
 const App = () => {
   const [routerState, setRouterState] = useReducer(
     (current, newState) => ({ ...current, ...newState }),
-    { showView: null, apiKey: null, state: null }
+    { showView: null, apiKey: null, state: null, email: null }
   )
-  const { showView, apiKey, state } = routerState;
+  const { showView, apiKey, state, email } = routerState;
   const [login, setLogin] = useState({});
   const { state: loginState, user } = login;
 
@@ -49,7 +49,8 @@ const App = () => {
       .on('/login/:apiKey', ({ apiKey }, query) => {
         const urlParams = new URLSearchParams(query);
         const state = urlParams.get('state');
-        setRouterState({ showView: 'login', apiKey, state });
+        const email = urlParams.get('email');
+        setRouterState({ showView: 'login', apiKey, state, email });
       })
       .on('/', () => {
         setRouterState({ showView: 'main' });
@@ -66,7 +67,7 @@ const App = () => {
 
   if (!loginState) return <Loader text="Checking login..." />;
 
-  return <ShowPage showView={showView} user={user} apiKey={apiKey} state={state} />
+  return <ShowPage showView={showView} user={user} apiKey={apiKey} state={state} email={email} />
 };
 
 ReactDOM.render(<ChakraProvider theme={theme}><App /></ChakraProvider>, document.getElementById('app'));

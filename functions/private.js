@@ -92,7 +92,8 @@ app.post("/clients", async (req, res) => {
 
   const clientDefaults = {
     name: `NewClient`,
-    owners: [req.user.sub]
+    owners: [req.user.sub],
+    exchangeSecret: uuidv4()
   };
 
   return admin.firestore().collection("clients")

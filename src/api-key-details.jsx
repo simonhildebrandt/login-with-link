@@ -44,7 +44,7 @@ function validUrl(url) {
 }
 
 function ApiKeyDetails({ clientId, apiKey, refresh }) {
-  const { name, key, returnUrl, secret, exchange = false, loginLimit = DEFAULT_LOGIN_LIMIT } = apiKey;
+  const { name, key, returnUrl, secret, exchangeSecret, exchange = false, loginLimit = DEFAULT_LOGIN_LIMIT } = apiKey;
 
   const keyLink = `${host}/#/login/${key}`;
 
@@ -93,12 +93,15 @@ function ApiKeyDetails({ clientId, apiKey, refresh }) {
     setNewExchange(exchange);
   }, []);
 
-  const [hidden, setHidden] = useState(true);
-
-  function toggleHidden() { setHidden(!hidden); }
+  const [secretHidden, setSecretHidden] = useState(true);
+  const [exchangeHidden, setExchangeHidden] = useState(true);
 
   function copySecret() {
     navigator.clipboard.writeText(secret);
+  }
+
+  function copyExchangeSecret() {
+    navigator.clipboard.writeText(exchangeSecret);
   }
 
   function copyLink() {
@@ -207,15 +210,15 @@ function ApiKeyDetails({ clientId, apiKey, refresh }) {
         <FormControl id="secret">
           <FormLabel>Secret</FormLabel>
           <InputGroup size="sm">
-            <InputLeftAddon onClick={toggleHidden}><ViewIcon /></InputLeftAddon>
+            <InputLeftAddon onClick={_ => setSecretHidden(!secretHidden)}><ViewIcon /></InputLeftAddon>
             <Input
               id={`secret-${key}`}
               disabled
               readOnly
-              type={hidden ? "password" : "text"}
+              type={secretHidden ? "password" : "text"}
               value={secret}
             />
-            {!hidden && (
+            {!secretHidden && (
               <InputRightAddon onClick={copySecret}><CopyIcon /></InputRightAddon>
             )}
           </InputGroup>
@@ -247,6 +250,27 @@ function ApiKeyDetails({ clientId, apiKey, refresh }) {
           <FormHelperText>Use the more complex (but more secure) code exchange process.</FormHelperText>
         </FormControl>
       </Box>
+      { newExchange &&
+        <Box>
+          <FormControl id="exchange-secret">
+            <FormLabel>Exchange Secret</FormLabel>
+            <InputGroup size="sm">
+              <InputLeftAddon onClick={_ => setExchangeHidden(!exchangeHidden)}><ViewIcon /></InputLeftAddon>
+              <Input
+                id={`exchange-secret-${key}`}
+                disabled
+                readOnly
+                type={exchangeHidden ? "password" : "text"}
+                value={exchangeSecret}
+              />
+              {!exchangeHidden && (
+                <InputRightAddon onClick={copyExchangeSecret}><CopyIcon /></InputRightAddon>
+              )}
+            </InputGroup>
+            <FormHelperText>The secret used to exchange a code for a secret.</FormHelperText>
+          </FormControl>
+        </Box>
+      }
     </SimpleGrid>
     <Flex mt={4}>
       <HStack mt={4} flexGrow={1} flexWrap="wrap" justifyContent="flex-end">

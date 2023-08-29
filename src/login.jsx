@@ -24,8 +24,8 @@ const getApiDataUrl = baseURL + "api/keys/";
 const sendLinkUrl = baseURL + "api/send-link";
 
 
-function LoginBody({successResponse, apiKeyData, onSubmit, sendingRequest}) {
-  const [email, setEmail] = useState("");
+function LoginBody({successResponse, apiKeyData, onSubmit, sendingRequest, emailValue}) {
+  const [email, setEmail] = useState(emailValue);
   const {name, style} = apiKeyData;
 
   function updateEmail(e) {
@@ -74,7 +74,7 @@ function LoginBody({successResponse, apiKeyData, onSubmit, sendingRequest}) {
 }
 
 
-function Login({ apiKey, state }) {
+function Login({ apiKey, state, email="" }) {
   const [apiKeyData, setApiKeyData] = useState(null);
   const [sendingRequest, setSendingRequest] = useState(false);
   const [successResponse, setSuccessResponse] = useState(false);
@@ -118,6 +118,7 @@ function Login({ apiKey, state }) {
         apiKeyData={apiKeyData}
         sendingRequest={sendingRequest}
         onSubmit={onSubmit}
+        emailValue={email}
       />
 
     </Box>

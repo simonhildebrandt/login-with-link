@@ -14,7 +14,7 @@ This site uses __Login With Link__ itself for authentication, so the simplest wa
 
 The remaining step is on the server. Verifying the signature as [Express](https://expressjs.com/) [middleware](https://expressjs.com/en/guide/using-middlewa) is demonstrated in [private.js](https://github.com/simonhildebrandt/login-with-link/blob/master/functions/private.js#L17), using the `checkToken` function in [utils.js](https://github.com/simonhildebrandt/login-with-link/blob/master/functions/utils.js#L21) - all based on the [jsonwebtoken](https://www.npmjs.com/package/jsonwebtoken) package.
 
-(__Login With Link__ also supports passing state, similar to how OAuth does it; passing a `state` URL parameter to our login page will result in that value being returned to you as a `lwl-state` URL parameter in the final stage of the exchange, and in the data delivered in the code check action.)
+(__Login With Link__ also supports passing state, similar to how OAuth does it; passing a `state` URL parameter to our login page will result in that value being returned to you as a `lwl-state` URL parameter in the final stage of the exchange, and in the data delivered in the code check action. And if you already know the user's email address you can even supply it to the login page as an `email` parameter, to further smooth the user's path.)
 
 ### Configuration
 
@@ -28,6 +28,7 @@ When editing client configuration, you'll see the following fields:
  - __Secret__ - the secret used to sign the JWT, which you can then use to verify the JWT came from us.
  - __Return URL__ - the URL of your site, where the authenticated user should end up. (This URL will automatically have the JWT merged into its parameters, as `lwl-token`.)
 - __Login Link__ - below the key details we show the login link you should use - click it to try it out, then copy it to use in your site.
-- __Code exchange?__ - to make a small sacrifice of simiplicity for security, activate code exchange mode for the PKCE-style code exchange mentioned above. Instead of a token in the `lwl-token` URL parameter, you'll get `lwl-code`, which contains a value that can then be *exchanged* for a token (JWT), at `https://login-with.link/api/exchange/<code>`.
+- __Code exchange?__ - to make a small sacrifice of simiplicity for security, activate code exchange mode for the PKCE-style code exchange mentioned above. Instead of a token in the `lwl-token` URL parameter, you'll get `lwl-code`, which contains a value that can then be *exchanged* for a token (JWT), by POSTing to `https://login-with.link/api/exchange` with the code and the secret described next.
+- __Exchange Secret__ - to use code exchange, the POST described above requires two parameters (in either `application/json` or `application/x-www-form-urlencoded` content type) - 'code' and 'secret'. The value listed here is the 'secret' part.
 
 (Additionally, the envelope button displays a preview of the login email we'll send, and there are some stats at the bottom indicating your recent login count, and current login cap.)
