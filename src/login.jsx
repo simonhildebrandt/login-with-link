@@ -101,9 +101,9 @@ function Login({ apiKey, state, email="" }) {
   if (!apiKeyData) return <Loader text="Loading client..." />;
 
   return <Box
-      minWidth={500}
+      minWidth={200}
       mx="auto"
-      w="50%"
+      w="70%"
       pt={32}
     >
     <Box
