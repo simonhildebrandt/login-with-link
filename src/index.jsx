@@ -49,7 +49,7 @@ const App = () => {
       .on('/login/:apiKey', ({ apiKey }, query) => {
         const urlParams = new URLSearchParams(query);
         const state = urlParams.get('state');
-        const email = urlParams.get('email');
+        const email = urlParams.get('email') || "";
         setRouterState({ showView: 'login', apiKey, state, email });
       })
       .on('/', () => {

@@ -74,7 +74,7 @@ function LoginBody({successResponse, apiKeyData, onSubmit, sendingRequest, email
 }
 
 
-function Login({ apiKey, state, email="" }) {
+function Login({ apiKey, state, email }) {
   const [apiKeyData, setApiKeyData] = useState(null);
   const [sendingRequest, setSendingRequest] = useState(false);
   const [successResponse, setSuccessResponse] = useState(false);
