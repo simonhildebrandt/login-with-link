@@ -1,5 +1,4 @@
 const admin = require('firebase-admin');
-const jwt = require('jsonwebtoken');
 const { v4: uuidv4 } = require('uuid');
 
 const express = require('express');

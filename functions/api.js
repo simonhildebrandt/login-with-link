@@ -25,7 +25,7 @@ const app = express();
 app.use(cors({ origin: true }));
 app.use(express.json());
 
-app.use((req, res, next) => {
+app.use((req, _res, next) => {
   // Clear function name out of url for Firebase rewrite
   req.url = req.url.replace(/\/api/, "");
   next();
@@ -244,11 +244,14 @@ app.get("/check", async (req, res) => {
     ({status, data}) => {
       switch (status) {
         case 'token-or-key-missing':
-          res.status(401).json({ message: "No token" })
+          res.status(401).json({ message: "No token" });
+          break;
         case 'token-invalid':
-          res.status(401).json({ message: "failed token check" })
+          res.status(401).json({ message: "failed token check" });
+          break;
         case 'token-valid':
-          res.status(200).json({ message: "valid token", user: data })
+          res.status(200).json({ message: "valid token", user: data });
+          break;
         default:
           res.status(500).end();
       }

@@ -8,7 +8,7 @@ follow that link and they're back at your site, with a [JSON Web Token](https://
 
 ## How's Login With Link different?
 Authentication is the most annoying thing to build for any
-project - particularly small or experimental ones. And
+project - particularly small or experimental ones.
 OAuth flows are a hassle, with integration configuration to
 setup, test and maintain. Authentication providers like Auth0
 or Firebase help manage it, but it's still a mess - when
@@ -18,6 +18,8 @@ __Login With Link__ acts just like the 'secure login link' from sites like Tumbl
 
 ## Cost?
 
-__Login With Link__ is currently free, as we add features and find out who it's useful for. It's capped at 50 logins per day, to keep our server costs down - if you need more [let us know](mailto:simonhildebrandt@gmail.com).
+__Login With Link__ offers a free tier (currently capped at 50 logins per day, to keep our server costs down) - we'll always provide this.
 
-Beyond the alpha we'll introduce pricing tiers - but there'll always be an introductory free tier.
+Our __$10 AUD monthly plan__ raises your daily login limit to __10,000__, and includes basic customer support.
+
+Contact [help@login-with.link](mailto:help@login-with.link) to purchase, or for more information.
