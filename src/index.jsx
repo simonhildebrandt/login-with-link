@@ -5,7 +5,7 @@ import ReactDOM from 'react-dom';
 
 import { ChakraProvider } from "@chakra-ui/react"
 
-import { navigate, useRouter } from './router';
+import { useRouter, rewriteHashURL } from './router';
 import Pages from './pages';
 import Main from './main';
 import Admin from './admin';
@@ -20,6 +20,7 @@ import theme from './theme';
 
 
 handleToken();
+rewriteHashURL();
 
 
 function ShowPage({ showView, user, apiKey, state, email }) {
@@ -40,22 +41,26 @@ const App = () => {
 
   useRouter(router => {
     router
-      .on('/admin', () => {
+      .on('admin', () => {
         setRouterState({ showView: 'admin' });
       })
-      .on('/docs', () => {
+      .on('docs', () => {
         setRouterState({ showView: 'docs' });
       })
-      .on('/login/:apiKey', ({ apiKey }, query) => {
+      .on('login', () => {
+        console.log('here?')
+        setRouterState({ showView: 'main' });
+      })
+      .on('login/:apiKey', ({ apiKey }, query) => {
         const urlParams = new URLSearchParams(query);
         const state = urlParams.get('state');
         const email = urlParams.get('email') || "";
         setRouterState({ showView: 'login', apiKey, state, email });
       })
-      .on('/', () => {
+      .on(() => {
         setRouterState({ showView: 'main' });
       })
-      .on('/:other', ({ other }) => {
+      .on(':other', ({ other }) => {
         setRouterState({ showView: other });
       })
       .resolve();

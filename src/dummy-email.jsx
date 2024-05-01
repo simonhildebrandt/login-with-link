@@ -8,7 +8,9 @@ import {
   formatEmailSubject, formatTextEmail, formatHtmlEmail
 } from "../functions/email-template";
 
-import { host } from './utils';
+import { config } from './utils';
+
+const { host } = config();
 
 
 function DummyEmail({ client }) {
