@@ -23,7 +23,7 @@ function rewriteHashURL() {
 }
 
 function createURL(path) {
-  return `${host}/${path}`;
+  return `${host}${path}`;
 }
 
 

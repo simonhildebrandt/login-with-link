@@ -12,11 +12,11 @@ export function config () {
   const environments = {
     development: {
       baseURL: "http://localhost:5001/login-with-link/us-central1/",
-      host:    "http://127.0.0.1:9000"
+      host:    "http://127.0.0.1:9000/"
     },
     staging: {
       baseURL: "https://staging.login-with.link/",
-      host:    "https://staging.login-with.link/"
+      host:    "https://staging.login-with.link"
     },
     production: {
       baseURL: "https://login-with.link/",
