@@ -18,6 +18,8 @@ import { privateKey } from './utils';
 
 import theme from './theme';
 
+import MetaAdmin from './meta-admin';
+
 
 handleToken();
 
@@ -26,6 +28,7 @@ function ShowPage({ showView, user, apiKey, state, email }) {
   if (showView === 'login') return <Login user={user} apiKey={apiKey} state={state} email={email} />;
   if (showView === 'admin') return <Admin user={user} />;
   if (showView === 'main') return <Main user={user} />;
+  if (showView === 'meta-admin') return <MetaAdmin/>;
   return <Pages user={user} page={showView} />;
 }
 
@@ -45,6 +48,9 @@ const App = () => {
       })
       .on('/docs', () => {
         setRouterState({ showView: 'docs' });
+      })
+      .on('/meta-admin/*', () => {
+        setRouterState({ showView: 'meta-admin' });
       })
       .on('/login/:apiKey', ({ apiKey }, query) => {
         const urlParams = new URLSearchParams(query);

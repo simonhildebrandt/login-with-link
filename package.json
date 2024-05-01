@@ -7,8 +7,8 @@
   "license": "MIT",
   "scripts": {
     "serve": "live-server --port=9000 dev/",
-    "build": "yarn esbuild src/index.jsx --bundle --outfile=dev/index.js --define:ENV=\"'development'\"",
-    "watch": "yarn esbuild src/index.jsx --bundle --outfile=dev/index.js --watch --define:ENV=\"'development'\"",
+    "build": "yarn esbuild src/index.jsx --preserve-symlinks --keep-names --bundle --outfile=dev/index.js --define:ENV=\"'development'\"",
+    "watch": "yarn esbuild src/index.jsx --preserve-symlinks --keep-names --bundle --outfile=dev/index.js --watch --define:ENV=\"'development'\"",
     "build_staging": "yarn esbuild src/index.jsx --bundle --outfile=public/index.js --define:ENV=\"'staging'\"",
     "build_production": "yarn esbuild src/index.jsx --bundle --outfile=public/index.js --define:ENV=\"'production'\"",
     "deploy_functions": "firebase deploy --only functions",
@@ -33,6 +33,7 @@
     "babel-plugin-transform-inline-environment-variables": "^0.4.3",
     "babelify": "^10.0.0",
     "browserify": "^16.5.1",
+    "cookie-parser": "^1.4.6",
     "ejs": "^3.1.6",
     "ejs-lint": "^1.2.1",
     "esbuild": "^0.19.2",
