@@ -16,7 +16,7 @@ export function config () {
     },
     staging: {
       baseURL: "https://staging.login-with.link/",
-      host:    "https://staging.login-with.link"
+      host:    "https://staging.login-with.link/"
     },
     production: {
       baseURL: "https://login-with.link/",
