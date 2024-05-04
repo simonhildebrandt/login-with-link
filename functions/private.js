@@ -75,7 +75,8 @@ function createApiKey(clientId) {
     key,
     name: `key - ${key}`,
     returnUrl: "http://yoursite.com/landing?",
-    secret: uuidv4()
+    secret: uuidv4(),
+    exchangeSecret: uuidv4()
   };
 
   return admin.firestore().collection("apiKeys").add(keyDefaults)
@@ -91,8 +92,7 @@ app.post("/clients", async (req, res) => {
 
   const clientDefaults = {
     name: `NewClient`,
-    owners: [req.user.sub],
-    exchangeSecret: uuidv4()
+    owners: [req.user.sub]
   };
 
   return admin.firestore().collection("clients")
