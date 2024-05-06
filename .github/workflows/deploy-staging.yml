@@ -26,6 +26,6 @@ jobs:
       - name: Deploy to Firebase
         run: |
           firebase use staging
-          firebase deploy --only functions
+          firebase deploy --only hosting,functions
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
