@@ -44,7 +44,7 @@ function LoginBody({successResponse, apiKeyData, onSubmit, sendingRequest, email
   return <>
     { style === 'faslet' ? (
       <>
-        <img src="faslet-logo.png"/>
+        <img src="/faslet-logo.png"/>
         <Box my={4} p={2} style={{backgroundColor: "#4faf93"}} color="white">
           Enter your email below to log in to <strong>{name}</strong>.
         </Box>
