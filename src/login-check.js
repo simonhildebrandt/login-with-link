@@ -1,6 +1,5 @@
 import Axios from 'axios';
 import { config } from './utils';
-import { navigate } from './router';
 
 const { baseURL } = config();;
 

@@ -3,13 +3,11 @@ import React, { useContext } from 'react';
 import {
   Flex,
   Box,
-  Image,
   Button,
   Menu,
   MenuButton,
   MenuList,
   MenuItem,
-  MenuGroup,
   HStack
 } from "@chakra-ui/react";
 
