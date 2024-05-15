@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 
 import {
   Flex,
@@ -18,16 +18,20 @@ import { logout } from './login-check';
 
 import { navigate } from './router';
 
+import { UserContext } from './user-context';
+
 import Logo from './logo';
 
 
 function UserTools({ user }) {
   const { email } = user;
 
+  const { setLogin } = useContext(UserContext);
+
   return <Menu>
     <MenuButton color="blue.600" fontWeight="bold">{email} <ChevronDownIcon /></MenuButton>
     <MenuList>
-      <MenuItem onClick={logout}>Logout</MenuItem>
+      <MenuItem onClick={() => logout(setLogin)}>Logout</MenuItem>
     </MenuList>
   </Menu>
 }

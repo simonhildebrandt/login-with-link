@@ -1,5 +1,6 @@
 import Axios from 'axios';
 import { config } from './utils';
+import { navigate } from './router';
 
 const { baseURL } = config();;
 
@@ -32,9 +33,9 @@ export function handleToken() {
   }
 }
 
-export function logout() {
+export function logout(setLogin) {
   localStorage.removeItem(storageKey);
-  window.location.reload();
+  setLogin({ state: "loggedOut" });
 }
 
 export function getToken() {
