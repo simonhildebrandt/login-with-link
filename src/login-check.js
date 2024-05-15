@@ -1,5 +1,8 @@
 import Axios from 'axios';
-import { baseURL } from './utils';
+import { config } from './utils';
+import { navigate } from './router';
+
+const { baseURL } = config();;
 
 const storageKey = "lwlToken";
 const tokenCheckUrl = baseURL + "api/check";
@@ -30,9 +33,9 @@ export function handleToken() {
   }
 }
 
-export function logout() {
+export function logout(setLogin) {
   localStorage.removeItem(storageKey);
-  window.location.reload();
+  setLogin({ state: "loggedOut" });
 }
 
 export function getToken() {

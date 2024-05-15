@@ -14,11 +14,13 @@ import {
 
 import Axios from 'axios';
 
-import { baseURL } from './utils';
+import { config } from './utils';
 import Page from './page';
 import Loader from './loader';
 import ErrorPage from './error-page';
 
+
+const { baseURL } = config();
 
 const getApiDataUrl = baseURL + "api/keys/";
 const sendLinkUrl = baseURL + "api/send-link";

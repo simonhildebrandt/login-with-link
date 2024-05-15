@@ -1,25 +1,26 @@
 import "@babel/polyfill";
 
-import React, { useState, useReducer, useEffect } from 'react';
+import React, { useReducer, useContext } from 'react';
 import ReactDOM from 'react-dom';
 
 import { ChakraProvider } from "@chakra-ui/react"
 
-import { navigate, useRouter } from './router';
+import { useRouter, rewriteHashURL } from './router';
 import Pages from './pages';
 import Main from './main';
 import Admin from './admin';
 import Login from './login';
 import Loader from './loader';
 
-import { handleToken, loginCheck } from './login-check';
+import { handleToken } from './login-check';
 
-import { privateKey } from './utils';
+import { UserContext, UserProvider } from './user-context';
 
 import theme from './theme';
 
 
 handleToken();
+rewriteHashURL();
 
 
 function ShowPage({ showView, user, apiKey, state, email }) {
@@ -35,39 +36,46 @@ const App = () => {
     { showView: null, apiKey: null, state: null, email: null }
   )
   const { showView, apiKey, state, email } = routerState;
-  const [login, setLogin] = useState({});
+
+  const { login } = useContext(UserContext);
   const { state: loginState, user } = login;
 
   useRouter(router => {
     router
-      .on('/admin', () => {
+      .on('admin', () => {
         setRouterState({ showView: 'admin' });
       })
-      .on('/docs', () => {
+      .on('docs', () => {
         setRouterState({ showView: 'docs' });
       })
-      .on('/login/:apiKey', ({ apiKey }, query) => {
+      .on('login', () => {
+        setRouterState({ showView: 'main' });
+      })
+      .on('login/:apiKey', ({ apiKey }, query) => {
         const urlParams = new URLSearchParams(query);
         const state = urlParams.get('state');
         const email = urlParams.get('email') || "";
         setRouterState({ showView: 'login', apiKey, state, email });
       })
-      .on('/', () => {
+      .on(() => {
         setRouterState({ showView: 'main' });
       })
-      .on('/:other', ({ other }) => {
+      .on(':other', ({ other }) => {
         setRouterState({ showView: other });
       })
       .resolve();
   });
-
-  useEffect(() => {
-    loginCheck({ key: privateKey }).then(result => setLogin(result));
-  }, []);
 
   if (!loginState) return <Loader text="Checking login..." />;
 
   return <ShowPage showView={showView} user={user} apiKey={apiKey} state={state} email={email} />
 };
 
-ReactDOM.render(<ChakraProvider theme={theme}><App /></ChakraProvider>, document.getElementById('app'));
+ReactDOM.render(
+  <ChakraProvider theme={theme}>
+    <UserProvider>
+      <App />
+    </UserProvider>
+  </ChakraProvider>,
+  document.getElementById('app')
+);

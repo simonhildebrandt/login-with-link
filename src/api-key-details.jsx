@@ -27,11 +27,13 @@ import { ViewIcon, CopyIcon } from '@chakra-ui/icons'
 
 import DeleteDialog from './delete-dialog';
 
-import { useAuthedApiCall, host } from './utils';
+import { useAuthedApiCall } from './utils';
 
 import { DEFAULT_LOGIN_LIMIT } from '../functions/constants';
 
 import EditableControls from './editable-controls';
+
+import { createURL } from './router';
 
 
 function validUrl(url) {
@@ -46,7 +48,7 @@ function validUrl(url) {
 function ApiKeyDetails({ clientId, apiKey, refresh }) {
   const { name, key, returnUrl, secret, exchangeSecret, exchange = false, loginLimit = DEFAULT_LOGIN_LIMIT } = apiKey;
 
-  const keyLink = `${host}/#/login/${key}`;
+  const keyLink = createURL(`login/${key}`);
 
   const [newName, setNewName] = useState("");
   const [newUrl, setNewUrl] = useState("");
@@ -176,8 +178,11 @@ function ApiKeyDetails({ clientId, apiKey, refresh }) {
             )}
           </Editable>
 
-        <Flex fontSize={12} flexGrow={1} align="center" onClick={copyLink} color="gray.500">
-          <Link href={keyLink}>{keyLink}</Link>
+        <Flex direction="row">
+          <Flex fontSize={12} fontWeight="bold" flexGrow={1} align="center" color="gray.500">
+            {keyLink}
+          </Flex>
+          <Button size="sm" variant="ghost" onClick={copyLink}><CopyIcon /></Button>
         </Flex>
       </Flex>
 
