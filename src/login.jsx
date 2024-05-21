@@ -15,7 +15,6 @@ import {
 import Axios from 'axios';
 
 import { config } from './utils';
-import Page from './page';
 import Loader from './loader';
 import ErrorPage from './error-page';
 
