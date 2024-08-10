@@ -1,7 +1,7 @@
 import Axios from 'axios';
 import { config } from './utils';
 
-const { baseURL } = config();;
+const { baseURL } = config();
 
 const storageKey = "lwlToken";
 const tokenCheckUrl = baseURL + "api/check";

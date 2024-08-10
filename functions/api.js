@@ -131,6 +131,7 @@ async function sendLink(key, email, state) {
 
   const url = `${API_URL}/api/done/${link.uuid}`;
 
+  console.log('sending email')
   if (DEV_MODE) {
     console.log("Login link:", url)
   } else {
