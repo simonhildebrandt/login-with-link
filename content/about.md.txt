@@ -6,7 +6,7 @@ __Login With Link__ aims to be the simplest authentication solution available fo
 
 We take privacy seriously with Login With Link.
 
-We won't sell your information, and we'll do out best to secure it.
+We won't sell your information, and we'll do our best to secure it.
 
 ## Contact
 
