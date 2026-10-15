@@ -46,6 +46,6 @@
     "watchify": "^3.11.1"
   },
   "devDependencies": {
-    "firebase-tools": "~13"
+    "firebase-tools": "^15.34.0"
   }
 }
